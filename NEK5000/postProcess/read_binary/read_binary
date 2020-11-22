@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Nov  6 17:50:20 2020
+
+@author: akimlavrinenko
+"""
+
+import time
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+import binascii
+
+
+
+
+start_time = time.time()
+case_name = 'fortran_ascii'
+file_ext = 'dat' #extension
+
+#reading data  
+f1 = open( case_name + '.' + file_ext, 'r')
+# print(f1.read())
+f1.close()
+
+with open("fortran_bin", "rb") as f:
+    byte = f.read(1)
+    while byte:
+        # Do stuff with byte.
+        byte = f.read(1)
+        # print(byte)
+
+from scipy.io import FortranFile
+f = FortranFile('fortran_bin', 'r')
+print(f.read_reals( dtype=np.float32))
+
+with open('fortran_bin','r') as f:
+    header = np.fromfile(f, dtype=np.int, count=1)
+    data = np.fromfile(f, dtype=np.float32)
+    
+# from fortranfile import FortranFile
+# from struct import unpack
+
+# with FortranFile(byte) as fh:
+#     dat = fh.readRecord()
+#     val_list = unpack('=4i20d'.format(ln), dat)
+
+c = np.fromfile('fortran_bin')
+
+# a = binascii.b2a_uu(byte, backtick=False)
+
+# print(a)
+# n.to_bytes((n.bit_length() + 7) // 8, 'big').decode()
+# data = np.genfromtxt( case_name + '.' + file_ext, invalid_raise = False)

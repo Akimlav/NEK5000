@@ -1,0 +1,9 @@
+*******************************
+createCase version change log
+*******************************
+1)createCase_v1.2 16.07.2020
+added fresh water temparutes with density from 10 to 2.2 degree
+
+2)createCase_v1.3 21.08.2020 
+controlDict setup from initialConditions.py file
+decomposeParDict setup from initialConditions.py file

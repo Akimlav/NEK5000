@@ -1,0 +1,10 @@
+# y+ ()       
+# Time        	patch         	min           	max           	average       
+0             	propeller	1.174608e-01	1.972438e+00	5.860145e-01
+0             	outerCylinder	2.076344e+00	2.075972e+01	5.998062e+00
+2             	propeller	8.084076e+00	6.717791e+02	1.682548e+02
+2             	outerCylinder	1.692594e+00	2.068088e+01	5.873411e+00
+3             	propeller	9.368815e+00	6.699916e+02	1.684297e+02
+3             	outerCylinder	1.520297e+00	2.129292e+01	6.269352e+00
+4             	propeller	9.691266e+00	6.656750e+02	1.686206e+02
+4             	outerCylinder	1.360738e+00	5.573021e+01	8.724331e+00
