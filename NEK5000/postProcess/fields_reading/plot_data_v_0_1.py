@@ -3,10 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-
-
-
-
 start_time = time.time()
 case_name = 'lid-driven_test'
 file_ext = 'his' #extension
@@ -37,10 +33,10 @@ for key in probes.keys():
 
 probes_numpy = np.array(probes_l)
 
-itemindex = np.where(probes_numpy==4)
+itemindex = np.where(probes_numpy==1)
 itemindex2 = np.where(probes_numpy==5)
 x1 = int(itemindex[1][0])
-x2 = int(itemindex2[1][0]) 
+x2 = int(itemindex2[1][0])
 new_res = probes_numpy[:,x1:x2+1,:]
 
 
