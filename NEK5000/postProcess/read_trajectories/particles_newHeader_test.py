@@ -3,10 +3,9 @@
 from sys import argv
 from os import system,remove,cpu_count
 import numpy as np
-# import matplotlib
 # matplotlib.use('qt5agg')
 import matplotlib.pyplot as plt
-# from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d import Axes3D
 import gzip
 import shutil
 from multiprocessing import Pool
@@ -14,6 +13,7 @@ import random
 import glob
 import os
 import sys
+import matplotlib as mpl
 
 
 def readParticleFile(pfilename):
@@ -149,6 +149,8 @@ if __name__ == '__main__':
     
 # Command to generate a movie by just concatenating the images
 #ffmpeg -framerate 60 -start_number 1 -i opt_fbalance0%04d.3D.jpg -codec copy particles_2.mkv
+
+###################################################################################################################
 time, pdata = readParticleFile('fbalance00002.3D')
 time0, pdata0 = readParticleFile('fbalance00001.3D')
 x0 = np.asarray(pdata0['xp'][0][1][0][0])
@@ -198,26 +200,55 @@ rndmp_numpy = np.array(rndmp)
 path = os.path.abspath(os.getcwd())
 path_list = (glob.glob(path + '/*.3D'))
 
-# file_list = os.listdir()
+file_list = os.listdir()
 xpt = []
 ypt = []
+zpt = []
+
 fileList = [name for name in os.listdir() if name.endswith(".3D")]
-for pfilename in fileList:
-    print(pfilename)
-    time,pdata = readParticleFile(pfilename)
-    print(np.asarray(pdata['xp'][0][1][0][0]))
-    xpt.append(pdata['xp'][0][1][0][0])
-    ypt.append(pdata['xp'][0][1][1][0])
+fileList.sort()
+
+fff = pdata['xp'][0][0][:,0]
+fff1 = pdata['xp'][0][0][:,1]
+fff2 = pdata['xp'][0][0][:,2]
+
+# for pfilename in fileList:
+#     print(pfilename)
+#     time,pdata = readParticleFile(pfilename)
+#     xpt.append(pdata['xp'][0][1][0][0])
+#     ypt.append(pdata['xp'][0][1][1][0])
+#     zpt.append(pdata['xp'][0][1][2][0])
     
+ 
+# for pfilename in fileList:
+#     print(pfilename)
+#     time,pdata = readParticleFile(pfilename)
+#     xpt.append(pdata['xp'][0][0][0][0])
+#     ypt.append(pdata['xp'][0][0][1][0])
+#     zpt.append(pdata['xp'][0][0][2][0])
+
+
+# mpl.rcParams['legend.fontsize'] = 10
+# fig = plt.figure()
+# ax = fig.gca(projection='3d')
+# ax.plot(xpt, ypt, zpt, label='Particle trajectory')
+# ax.set_xlabel('X')
+# ax.set_ylabel('Y')
+# ax.set_zlabel('Z')
+# ax.set_xlim(-0.5,0.5)
+# ax.set_ylim(-0.5,0.5)
+# ax.set_zlim(-0.5,0.5)
+# ax.legend()
+# plt.show()
     
-fig, ax = plt.subplots()
-ax.grid(True)
-plt.figure(1)
-# plt.plot(rndmp[:,0],rndmp[:,1],'bo')
-plt.plot(xpt, ypt, '-b')
-#plt.legend()
-plt.xlabel('Z')
-plt.ylabel('Y')
+# fig, ax = plt.subplots()
+# ax.grid(True)
+# plt.figure(1)
+# # plt.plot(rndmp[:,0],rndmp[:,1],'bo')
+# plt.plot(xpt, ypt, '-b')
+# #plt.legend()
+# plt.xlabel('Z')
+# plt.ylabel('Y')
 # plt.ylim(-0.5,0.5)
 # plt.xlim(-0.5,0.5)
 # plt.show()       
