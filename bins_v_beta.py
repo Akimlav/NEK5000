@@ -19,14 +19,14 @@ from time import time
 # num_rows, num_cols = data.shape
 print('path to working folder')
 # path = input() + '/'
-path = './'
+path = './fbalance/'
 fileList = [name for name in listdir(path) if name.endswith(".3D")]
 fileList.sort()
 #params
-step = 2 # file step
-nx = 2 #number of the bins
-num_ps = 2
-axis_count = 2
+step = 1 # file step
+nx = 5 #number of the bins
+num_ps = 5
+axis_count = 3
 fileList = fileList[0::step]
 x0 = -0.5
 y0 = -0.5
@@ -113,7 +113,7 @@ for file in fileList:
                     box_count = [p_count[z:z+(nx**2)] for z in range(0, len(p_count), (nx**2))]
                     t_count = [box_count[z:z+axis_count] for z in range(0, len(box_count), axis_count)]
                     xyz_count = [t_count[z:z+num_ps] for z in range(0, len(t_count), num_ps)] #xyz_count[file][ps][axis][box]
-                    time_array.append(np.round((t - 0.1628499834108E+03), 3))
+                    time_array.append(np.round((t - 0.1628499834108E+03), 4))
                     t_1 = [time_array[z:z+(nx**2)] for z in range(0, len(time_array), (nx**2))]
                     t_2 = [t_1[z:z+axis_count] for z in range(0, len(box_count), axis_count)]
                     t_3 = [t_2[z:z+num_ps] for z in range(0, len(t_count), num_ps)] #xyz_count[file][ps][axis][box]
@@ -121,43 +121,42 @@ for file in fileList:
 print('It was: %.3f seconds'  % (time() - start_time))
 
 t_box_array = []
+
+for axis in range(axis_count):
+    for ps in range(0,num_ps):
+        for box in range(0,len(box_node)**2):
+            for file in fileList:
+                tb = t_3[fileList.index(file)][ps][axis][box], xyz_count[fileList.index(file)][ps][axis][box]
+                print('axis', axis, 'ps', ps, 'box', box, file, '|', tb)
+                t_box_array.append(['axis', axis, 'ps', ps, 'box', box, file, '|', tb])
+
+tb1 = [t_box_array[z:z+(len(fileList)*nx**2*num_ps)] for z in range(0, len(t_box_array), (len(fileList)*nx**2*num_ps))]#axis
+tb2 = []
+tb3 = []
+tb4 = []
+tb5 = []
+for i in range(axis_count):
+    tb2 = [tb1[i][z:z+(nx**2*len(fileList))] for z in range(0, len(tb1[i]), (nx**2*len(fileList)))]
+    tb3.append(tb2)
+    
+for i in range(axis_count):
+    for j in range(num_ps):
+        tb4 = [tb3[i][j][z:z+len(fileList)] for z in range(0, len(tb3[i][j]), len(fileList))]
+        tb5.append(tb4)
+
+tb6 = []
+tb6 = [tb5[z:z+num_ps] for z in range(0, len(tb5), num_ps)]
+
+
+print('It was: %.3f seconds'  % (time() - start_time))
+# box_list = [[t_box_array[num], t_box_array[num+4]] for num in range(4)]
+# box_list = [[t_box_array[num], t_box_array[num+ (nx**2*axis_count*num_ps)]] for num in range(nx**2*axis_count*num_ps)]
+
+
+
 # fig = plt.figure(figsize=(4,3), dpi=100)
 # fontP = FontProperties()
 # fontP.set_size('xx-small')
-for file in fileList:
-    for ps in range(0,num_ps):
-        for axis in range(axis_count):
-            for box in range(0,len(box_node)**2):
-                tb = t_3[fileList.index(file)][ps][axis][box], xyz_count[fileList.index(file)][ps][axis][box]
-                # print(tb)
-                # print('___________')
-                t_box_array.append(tb)
-
-box_list = [[t_box_array[num], t_box_array[num+ (nx**2*axis_count*num_ps)]] for num in range(nx**2*axis_count*num_ps)]
-
-                # plt.plot(t_3[fileList.index(file)][ps][axis], xyz_count[fileList.index(file)][ps][axis], 'o')
-#     plt.plot(t_box_array[:,0], t_box_array[:,1], 'o-')
-#     plt.legend(xlabel, title='box', bbox_to_anchor=(1.13, 1),loc='upper right', prop=fontP)
-#     if axis == 0:
-#         axis_title = 'x'
-#     elif axis == 1:
-#         axis_title = 'y'
-#     elif axis == 2:
-#         axis_title = 'z'
-#     plt.title('axis - ' + axis_title +', particle size number - %d' %ps)
-#     plt.xlabel('time')
-#     plt.ylabel("number of particles in the bin")
-#     plt.grid(True)
-#     plt.ylim(bottom=0)
-# # plt.savefig(axis_title + '_p_size ' + str(ps) + '.png', dpi=200)
-# plt.show()
-
-# for box in range(0,len(box_node)**2):
-    
-    # plt.plot(t_box_array[:,0], t_box_array[:,1], 'o-')
-# 
-
-
 
 
 
