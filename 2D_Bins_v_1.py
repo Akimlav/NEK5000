@@ -18,11 +18,11 @@ start_time = time()
 # num_rows, num_cols = data.shape
 print('path to working folder')
 # path = input() + '/'
-path = './fbalance/'
+path = '../fbalance/'
 fileList = [name for name in listdir(path) if name.endswith(".3D")]
 fileList.sort()
 #params
-step = 2 # file step
+step = 3 # file step
 nx = 4 #number of the bins
 num_ps = 5
 axis_count = 3
@@ -30,8 +30,8 @@ fileList = fileList[0::step]
 x0 = -0.5
 y0 = -0.5
 z0 = -0.5
-center = np.asarray([0.4,0.4,0])
-radius = 0.05
+center = np.asarray([0.25,0.25,0])
+radius = 0.1
 
 box_coords = [[0 for x in range(nx+1)] for x in range(3)]
 box_node = [[0 for x in range(nx)] for x in range(3)]
@@ -106,7 +106,7 @@ for file in fileList:
                     if axis < 2:
                         yb = [np_xb[k,:] for k in range (0, len(np_xb)) if np_xb[k, axis+1] > box_coords[i][axis] and np_xb[k,axis+1] < box_coords[i+1][axis]]
                     else:
-                        yb = [np_xb[k,:] for k in range (0, len(np_xb)) if np_xb[k, axis-1] > box_coords[i][axis] and np_xb[k,axis-1] < box_coords[i+1][axis]]
+                        yb = [np_xb[k,:] for k in range (0, len(np_xb)) if np_xb[k, axis-2] > box_coords[i][axis] and np_xb[k,axis-2] < box_coords[i+1][axis]]
                     l.append(np.asarray(yb))
                     p_count.append(len(yb))
 
