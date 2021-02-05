@@ -22,8 +22,8 @@ path = '../fbalance/'
 fileList = [name for name in listdir(path) if name.endswith(".3D")]
 fileList.sort()
 #params
-step = 3 # file step
-nx = 4 #number of the bins
+step = 1 # file step
+nx = 5 #number of the bins
 num_ps = 5
 axis_count = 3
 fileList = fileList[0::step]
@@ -118,9 +118,10 @@ for file in fileList:
                     t_2 = [t_1[z:z+axis_count] for z in range(0, len(box_count), axis_count)]
                     t_3 = [t_2[z:z+num_ps] for z in range(0, len(t_count), num_ps)] #xyz_count[file][ps][axis][box]
 
-print('It was: %.3f seconds'  % (time() - start_time2))
+print('Reading all data was: %.3f seconds' % (time() - start_time2))
+
 start_time3 = time()
-print('Restructurizing data')
+
 t_box_array = []
 
 for axis in range(axis_count):
@@ -149,7 +150,7 @@ tb6 = []
 tb6 = [tb5[z:z+num_ps] for z in range(0, len(tb5), num_ps)]
 
 
-print('It was: %.3f seconds'  % (time() - start_time3))
+print('Restructurizing was: %.3f seconds' % (time() - start_time3))
 # box_list = [[t_box_array[num], t_box_array[num+4]] for num in range(4)]
 # box_list = [[t_box_array[num], t_box_array[num+ (nx**2*axis_count*num_ps)]] for num in range(nx**2*axis_count*num_ps)]
 
@@ -176,7 +177,8 @@ for axis in range(axis_count):
             plt.ylabel("number of particles in the bin")
             plt.grid(True)
             plt.ylim(0, max(p_count))
-        plt.savefig(axis_title + '_p_size ' + str(ps) + '.png', dpi=200)
+        # plt.savefig(axis_title + '_p_size ' + str(ps) + '.png', dpi=200)
         # plt.show()
-print('It was: %.3f seconds'  % (time() - start_time4))
+
+print('Plotting was: %.3f seconds' % (time() - start_time4))
 print('All it was: %.3f seconds'  % (time() - start_time))
