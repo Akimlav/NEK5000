@@ -23,8 +23,8 @@ path = './fbalance/'
 fileList = [name for name in listdir(path) if name.endswith(".3D")]
 fileList.sort()
 #params
-step = 1 # file step
-nx = 5 #number of the bins
+step = 2 # file step
+nx = 4 #number of the bins
 num_ps = 5
 axis_count = 3
 fileList = fileList[0::step]
@@ -126,9 +126,9 @@ for axis in range(axis_count):
     for ps in range(0,num_ps):
         for box in range(0,len(box_node)**2):
             for file in fileList:
-                tb = t_3[fileList.index(file)][ps][axis][box], xyz_count[fileList.index(file)][ps][axis][box]
-                print('axis', axis, 'ps', ps, 'box', box, file, '|', tb)
-                t_box_array.append(['axis', axis, 'ps', ps, 'box', box, file, '|', tb])
+                tb = [t_3[fileList.index(file)][ps][axis][box], xyz_count[fileList.index(file)][ps][axis][box]]
+                # print('axis', axis, 'ps', ps, 'box', box, file, '|', tb)
+                t_box_array.append(tb)
 
 tb1 = [t_box_array[z:z+(len(fileList)*nx**2*num_ps)] for z in range(0, len(t_box_array), (len(fileList)*nx**2*num_ps))]#axis
 tb2 = []
@@ -153,64 +153,26 @@ print('It was: %.3f seconds'  % (time() - start_time))
 # box_list = [[t_box_array[num], t_box_array[num+ (nx**2*axis_count*num_ps)]] for num in range(nx**2*axis_count*num_ps)]
 
 
+legend = np.linspace(0, nx**2-1, nx**2, dtype = int)
 
-# fig = plt.figure(figsize=(4,3), dpi=100)
-# fontP = FontProperties()
-# fontP.set_size('xx-small')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-        
-# for axis in range(0, axis_count):
-#     for ps in range(0,n_ps):
-#         fig = plt.figure(figsize=(4,3), dpi=100)
-#         fontP = FontProperties()
-#         fontP.set_size('xx-small')
-#         for  box in range (0, len(xyz_count[0][0][0])):
-#             arr1 = np.asarray(xyz_count[axis][ps])
-#             arr2 = arr1.T
-#             plt.plot(time_axis[axis][ps], arr2[box], '-')
-#             legend = np.linspace(0, len(xyz_count[axis][ps][fileList.index(file)])-1, (len(xyz_count[axis][ps][fileList.index(file)])))
-#             plt.legend(title='box', bbox_to_anchor=(1.13, 1),loc='upper right', prop=fontP)
-#             if axis == 0:
-#                 axis_title = 'x'
-#             elif axis == 1:
-#                 axis_title = 'y'
-#             elif axis == 2:
-#                 axis_title = 'z'
-#             plt.title('axis - ' + axis_title +', particle size number - %d' %ps)
-#             plt.xlabel('time')
-#             plt.ylabel("number of particles in the bin")
-#             plt.grid(True)
-#             plt.ylim(bottom=0)
-#         plt.savefig(axis_title + '_p_size ' + str(ps) + '.png', dpi=200)
-#         plt.show()
-
-
+for axis in range(axis_count):
+    for ps in range(num_ps):
+        fig = plt.figure(figsize=(5,3.2), dpi=100)
+        fontP = FontProperties()
+        fontP.set_size('xx-small')
+        for  box in range (nx**2):
+            b = np.asarray(tb6[axis][ps][box])
+            plt.plot(b[:,0],b[:,1], '-')
+            plt.legend(legend, title='box', bbox_to_anchor=(1.13, 1),loc='upper right', prop=fontP)
+            if axis == 0:
+                axis_title = 'x'
+            elif axis == 1:
+                axis_title = 'y'
+            elif axis == 2:
+                axis_title = 'z'
+            plt.title('axis - ' + axis_title +', particle size number - %d' %ps)
+            plt.xlabel('time')
+            plt.ylabel("number of particles in the bin")
+            plt.grid(True)
+        plt.savefig(axis_title + '_p_size ' + str(ps) + '.png', dpi=200)
+        plt.show()
