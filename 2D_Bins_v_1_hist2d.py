@@ -9,22 +9,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
 from os import listdir
-from NEK5000_func_lib import particleCoordsNew
+from NEK5000_func_lib import particleCoordsNew, slice_per
 from time import time
 
 start_time = time()
 
 print('path to working folder')
 # path = input() + '/'
-path = '../fbalance/'
+path = './fbalance/'
 fileList = [name for name in listdir(path) if name.endswith(".3D")]
 fileList.sort()
 
 #params
-step = 3  # file step
+step = 1  # file step
 nx = 2 #number of the bins
-num_ps = 2
-axis_count = 2
+num_ps = 5
+axis_count = 3
 fileList = fileList[0::step]
 x0 = -0.5
 y0 = -0.5
@@ -151,7 +151,7 @@ for axis in range(axis_count):
                         box = tb3[fileList.index(file)][ps][axis][i][j]
                         tt = t_3[fileList.index(file)][ps][axis]
                         t_b = [tt, box]
-                        aa.append(['axis', axis, 'ps', str(ps), file, t_b])
+                        aa.append(t_b)
                         
 aa1 = [aa[z:z+(len(fileList)*nx**2*num_ps)] for z in range(0, len(aa), (len(fileList)*nx**2*num_ps))]#axis
 aa2 = []
@@ -163,10 +163,10 @@ for i in range(axis_count):
 
 xx = []
 xxx = []
+
 for axis in range(axis_count):
     for ps in range(num_ps):
-        xx = [[aa3[axis][ps][num], aa3[axis][ps][num+len(fileList)]] for num in range(len(fileList))]
-        print(len(xx))
+        xx = slice_per(aa3[axis][ps], nx**2)
         xxx.append(xx)
 
 x1 = [xxx[z:z+num_ps] for z in range(0, len(xxx), num_ps)]
@@ -176,29 +176,43 @@ print('Restructurizing was: %.3f seconds' % (time() - start_time3))
 start_time4 = time()
 legend = np.linspace(0, nx**2-1, nx**2, dtype = int)
 
-# for axis in range(axis_count):
-#     for ps in range(num_ps):
-#         fig = plt.figure(figsize=(4.5,3), dpi=100)
-#         fontP = FontProperties()
-#         fontP.set_size('xx-small')
-#         for  box in range (nx**2):
-#             b = np.asarray(x1[axis][ps][box])
-#             plt.plot(b[:,0],b[:,1], '-')
-#             plt.legend(legend, title='box', bbox_to_anchor=(1.13, 1),loc='upper right', prop=fontP)
-#             if axis == 0:
-#                 axis_title = 'x'
-#             elif axis == 1:
-#                 axis_title = 'y'
-#             elif axis == 2:
-#                 axis_title = 'z'
-#             plt.title('axis - ' + axis_title +', particle size number - %d' %ps)
-#             plt.xlabel('time')
-#             plt.ylabel("number of particles in the bin")
-#             plt.grid(True)
-#             plt.ylim(0, np.amax(t_c))
-#         plt.savefig(axis_title + '_p_size_' + str(ps) + '.png', dpi=200)
-#         plt.show()
+for axis in range(axis_count):
+    for ps in range(num_ps):
+        fig = plt.figure(figsize=(4.5,3), dpi=100)
+        fontP = FontProperties()
+        fontP.set_size('xx-small')
+        for  box in range (nx**2):
+            b = np.asarray(x1[axis][ps][box])
+            plt.plot(b[:,0],b[:,1], '-')
+            plt.legend(legend, title='box', bbox_to_anchor=(1.13, 1),loc='upper right', prop=fontP)
+            if axis == 0:
+                axis_title = 'x'
+            elif axis == 1:
+                axis_title = 'y'
+            elif axis == 2:
+                axis_title = 'z'
+            plt.title('axis - ' + axis_title +', particle size number - %d' %ps)
+            plt.xlabel('time')
+            plt.ylabel("number of particles in the bin")
+            plt.grid(True)
+            plt.ylim(0, np.amax(t_c))
+        # plt.savefig(axis_title + '_p_size_' + str(ps) + '.png', dpi=200)
+        # plt.show()
 
+s = 0
+M = fff[0]/ nx**2
+for file in fileList:
+    for i in range (nx**2):
+        s = (x1[0][0][i][fileList.index(file)][1] - M)**2
+    sigma = (s)**0.5/M
+    print(sigma)
+    
+
+    
+    
+    
+    
+    
 print('Plotting was: %.3f seconds' % (time() - start_time4))
 print('All it was: %.3f seconds'  % (time() - start_time))
 
