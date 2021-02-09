@@ -198,16 +198,25 @@ for axis in range(axis_count):
             plt.ylim(0, np.amax(t_c))
         # plt.savefig(axis_title + '_p_size_' + str(ps) + '.png', dpi=200)
         # plt.show()
-
+        
+sss = []
 s = 0
 M = fff[0]/ nx**2
 for file in fileList:
     for i in range (nx**2):
         s = (x1[0][0][i][fileList.index(file)][1] - M)**2
     sigma = (s)**0.5/M
+    sss.append(sigma)
+    
     print(sigma)
     
-
+plt.plot(b[:,0],sss, '-')
+plt.legend(legend, title='box', bbox_to_anchor=(1.13, 1),loc='upper right', prop=fontP)
+plt.title('axis - ' + axis_title +', particle size number - %d' %ps)
+plt.xlabel('time')
+plt.ylabel("number of particles in the bin")
+plt.grid(True)
+plt.ylim(0, np.amax(t_c))
     
     
     
