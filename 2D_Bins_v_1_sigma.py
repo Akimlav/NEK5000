@@ -16,15 +16,15 @@ start_time = time()
 
 print('path to working folder')
 # path = input() + '/'
-path = './fbalance/'
+path = '../fbalance/'
 fileList = [name for name in listdir(path) if name.endswith(".3D")]
 fileList.sort()
 
 #params
-step = 1  # file step
-nx = 2 #number of the bins
+step = 3  # file step
+nx = 5 #number of the bins
 num_ps = 5
-axis_count = 3
+axis_count = 1
 fileList = fileList[0::step]
 x0 = -0.5
 y0 = -0.5
@@ -200,14 +200,21 @@ for axis in range(axis_count):
         # plt.show()
         
 sss = []
-s = 0
+
 for axis in range(axis_count):
     for ps in range(num_ps):
         M = fff[ps]/ nx**2
         for file in fileList:
+            ss = 0
+            s = 0
+            sigma = 0
             for i in range (nx**2):
                 s = (x1[axis][ps][i][fileList.index(file)][1] - M)**2
-            sigma = s**0.5/M
+                ss = ss + s
+                print(x1[axis][ps][i][fileList.index(file)][1], s, ss)
+                print('_________________________________________________')
+            sigma = ss**0.5/M
+            print('sigma', sigma)
             sss.append(sigma)
 
 s1 = [sss[z:z+(len(fileList)*num_ps)] for z in range(0, len(sss), (len(fileList)*num_ps))]
