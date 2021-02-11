@@ -15,16 +15,16 @@ from time import time
 start_time = time()
 
 print('path to working folder')
-# path = input() + '/'
-path = '../fbalance/'
+path = input() + '/'
+#path = '../fbalance/'
 fileList = [name for name in listdir(path) if name.endswith(".3D")]
 fileList.sort()
 
 #params
-step = 3  # file step
+step = 10  # file step
 nx = 5 #number of the bins
 num_ps = 5
-axis_count = 1
+axis_count = 3
 fileList = fileList[0::step]
 x0 = -0.5
 y0 = -0.5
@@ -211,8 +211,8 @@ for axis in range(axis_count):
             for i in range (nx**2):
                 s = (x1[axis][ps][i][fileList.index(file)][1] - M)**2
                 ss = ss + s
-                print(x1[axis][ps][i][fileList.index(file)][1], s, ss)
-                print('_________________________________________________')
+               # print(x1[axis][ps][i][fileList.index(file)][1], s, ss)
+               # print('_________________________________________________')
             sigma = ss**0.5/M
             print('sigma', sigma)
             sss.append(sigma)
@@ -226,7 +226,7 @@ for axis in range(axis_count):
 legend_sigma = np.linspace(0,num_ps-1,num_ps)
 for axis in range(axis_count):
     
-    fig = plt.figure(figsize=(4.5,3.5), dpi=100)
+    fig = plt.figure(figsize=(4.5,4.0), dpi=200)
     fontP = FontProperties()
     fontP.set_size('xx-small')
     for ps in range(num_ps):
@@ -234,12 +234,12 @@ for axis in range(axis_count):
         plt.plot(b[:,0],s3[axis][ps], '-')
         plt.legend(legend_sigma, title='ps', bbox_to_anchor=(1.13, 1),loc='upper right', prop=fontP)
         if axis == 0:
-            axis_title = 'x'
-        elif axis == 1:
-            axis_title = 'y'
-        elif axis == 2:
             axis_title = 'z'
-        plt.title('axis - ' + axis_title)
+        elif axis == 1:
+            axis_title = 'x'
+        elif axis == 2:
+            axis_title = 'y'
+        plt.title('projection - ' + axis_title)
         plt.xlabel('time')
         plt.ylabel("sigma")
         plt.grid(True)
