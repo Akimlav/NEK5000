@@ -9,21 +9,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
 from os import listdir
-from NEK5000_func_lib import particleCoordsNew
+from NEK5000_func_lib import particleCoordsNew, slice_per
 from time import time
 
 start_time = time()
 
 print('path to working folder')
 # path = input() + '/'
-path = '../fbalance/'
+path = './fbalance/'
 fileList = [name for name in listdir(path) if name.endswith(".3D")]
 fileList.sort()
 
 #params
-step = 10 # file step
+step = 1  # file step
 nx = 2 #number of the bins
-num_ps = 2
+num_ps = 5
 axis_count = 3
 fileList = fileList[0::step]
 x0 = -0.5
@@ -83,10 +83,12 @@ for ps in range(num_ps):
 start_time2 = time()   
 for file in fileList:
     t, a = particleCoordsNew (path, file)
+    t = np.round((t - 0.1628499834108E+03), 3)
     for ps in range(0,num_ps):
         a_np = np.asarray(a[ps])
         data = a_np[ps_index[ps]]
         num_rows, num_cols = data.shape
+        # fig = plt.figure(figsize=(5, 5))
         for axis in range(axis_count):
             if axis < 2:
                 xedges = box_coords[:,axis]
@@ -98,7 +100,27 @@ for file in fileList:
                 H, xedges, yedges = np.histogram2d(data[:,axis], data[:,axis-2], bins=(xedges, yedges))
             H = H.T
             t_c.append(H)
-            time_array.append(np.round((t - 0.1628499834108E+03), 4))
+            time_array.append(t)
+            
+            xedges = box_coords[:,0]
+            yedges = box_coords[:,1]
+            x = data[:,0]
+            y = data[:,1]
+            H, xedges, yedges = np.histogram2d(x, y, bins=(xedges, yedges))
+            if axis == 0:
+                axis_title = 'x'
+            elif axis == 1:
+                axis_title = 'y'
+            elif axis == 2:
+                axis_title = 'z'
+                
+            # title = axis_title + ' axis, ' + str(ps) + ' ps, ' + str(t) + ' time'
+            # ax = fig.add_subplot(131, title=title,)
+            # plt.imshow(H, interpolation='nearest', origin='lower') #,
+            #             #extent=[xedges[0], xedges[-1], yedges[0], yedges[-1]])
+            # plt.tight_layout()
+            # plt.savefig('fig_' + axis_title + '_axis_' + str(ps) +'_ps_' + str(t) + '_t.png', dpi=200)
+            
             
 print('Reading all data was: %.3f seconds' % (time() - start_time2))   
        
@@ -129,7 +151,7 @@ for axis in range(axis_count):
                         box = tb3[fileList.index(file)][ps][axis][i][j]
                         tt = t_3[fileList.index(file)][ps][axis]
                         t_b = [tt, box]
-                        aa.append(['axis', axis, 'ps', ps, 'box', box, file, '|', t_b])
+                        aa.append(t_b)
                         
 aa1 = [aa[z:z+(len(fileList)*nx**2*num_ps)] for z in range(0, len(aa), (len(fileList)*nx**2*num_ps))]#axis
 aa2 = []
@@ -141,9 +163,10 @@ for i in range(axis_count):
 
 xx = []
 xxx = []
+
 for axis in range(axis_count):
     for ps in range(num_ps):
-        xx = [[aa3[axis][ps][num], aa3[axis][ps][num+nx**2]] for num in range(nx**2)]
+        xx = slice_per(aa3[axis][ps], nx**2)
         xxx.append(xx)
 
 x1 = [xxx[z:z+num_ps] for z in range(0, len(xxx), num_ps)]
@@ -173,21 +196,32 @@ for axis in range(axis_count):
             plt.ylabel("number of particles in the bin")
             plt.grid(True)
             plt.ylim(0, np.amax(t_c))
-        # plt.savefig(axis_title + '_p_size ' + str(ps) + '.png', dpi=200)
+        # plt.savefig(axis_title + '_p_size_' + str(ps) + '.png', dpi=200)
         # plt.show()
-
+        
+sss = []
+s = 0
+M = fff[0]/ nx**2
+for file in fileList:
+    for i in range (nx**2):
+        s = (x1[0][0][i][fileList.index(file)][1] - M)**2
+    sigma = (s)**0.5/M
+    sss.append(sigma)
+    
+    print(sigma)
+    
+plt.plot(b[:,0],sss, '-')
+plt.legend(legend, title='box', bbox_to_anchor=(1.13, 1),loc='upper right', prop=fontP)
+plt.title('axis - ' + axis_title +', particle size number - %d' %ps)
+plt.xlabel('time')
+plt.ylabel("number of particles in the bin")
+plt.grid(True)
+plt.ylim(0, np.amax(t_c))
+    
+    
+    
+    
+    
 print('Plotting was: %.3f seconds' % (time() - start_time4))
 print('All it was: %.3f seconds'  % (time() - start_time))
 
-# xedges = box_coords[:,0]
-# yedges = box_coords[:,1]
-# # xedges = [0, 1, 3, 5]
-# # yedges = [0, 2, 3, 4, 6]
-# x = data[:,0]
-# y = data[:,1]
-# # H, xedges, yedges = np.histogram2d(x, y, bins=(xedges, yedges))
-
-# fig = plt.figure(figsize=(10, 6))
-# ax = fig.add_subplot(131, title='imshow: square bins')
-# plt.imshow(H, interpolation='nearest', origin='lower',
-#            extent=[xedges[0], xedges[-1], yedges[0], yedges[-1]])

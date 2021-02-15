@@ -18,11 +18,11 @@ start_time = time()
 # num_rows, num_cols = data.shape
 print('path to working folder')
 # path = input() + '/'
-path = '../fbalance/'
+path = './fbalance/'
 fileList = [name for name in listdir(path) if name.endswith(".3D")]
 fileList.sort()
 #params
-step = 10 # file step
+step = 2 # file step
 nx = 5 #number of the bins
 num_ps = 5
 axis_count = 3

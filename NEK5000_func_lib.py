@@ -29,6 +29,9 @@ import multiprocessing
 # print('enter path to folder with files:')
 # path = input() + '/'
 
+def slice_per(source, step):
+    return [source[i::step] for i in range(step)]
+
 def readParticleFile(pfilename):
   # print("Reading "+pfilename)
   isgzip = 0
