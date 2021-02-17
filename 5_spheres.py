@@ -55,7 +55,7 @@ center_list = [  np.round(elem,2) for elem in center_list]
 center_list = center_list[0::25]
 center_array = np.asarray(center_list)
 
-marker_list = ['r.', 'y.', 'g.', 'c.', 'b.',]
+marker_list = ['ro', 'yo', 'go', 'co', 'bo',]
 for file in fileList:
     fig, axs = plt.subplots(2, 2,figsize=(7, 7))
     axs[1, 1] = plt.subplot(224, projection='3d')
@@ -93,15 +93,16 @@ for file in fileList:
 
         t, a = particleCoordsNew (path, file)
         t = np.round((t - 0.1628499834108E+03), 3)
+        fig.suptitle('Time: ' + str(t), fontsize=14, x=0.1)
         for ps in range(0,num_ps):
             a_np = np.asarray(a[ps])
             data = a_np[ps_index[ps]]
 
-            axs[0, 0].plot(data[:,1],data[:,2], marker_list[k], markersize=0.7)
+            axs[0, 0].plot(data[:,1],data[:,2], marker_list[k], markersize=0.5)
             axs[0, 0].set_title('X - projection')
-            axs[0, 1].plot(data[:,2],data[:,0], marker_list[k], markersize=0.7)
+            axs[0, 1].plot(data[:,2],data[:,0], marker_list[k], markersize=0.5)
             axs[0, 1].set_title('Y - projection')
-            axs[1, 0].plot(data[:,0],data[:,1], marker_list[k], markersize=0.7)
+            axs[1, 0].plot(data[:,0],data[:,1], marker_list[k], markersize=0.5)
             axs[1, 0].set_title('Z - projection')
             axs[1, 1].plot(data[:,0],data[:,1], data[:,2], marker_list[k], markersize=0.5)
             axs[1, 1].set_title('Isometric view')
@@ -115,7 +116,6 @@ for file in fileList:
             axs[0, 1].set_ylim([-0.5, 0.5])
             axs[1, 0].set_xlim([-0.5, 0.5])
             axs[1, 0].set_ylim([-0.5, 0.5])
-
     fig.savefig('5sp_' + file[:-3] + '.png', dpi = 250)
 
 print('All it was: %.3f seconds'  % (time() - start_time))
