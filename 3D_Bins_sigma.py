@@ -16,13 +16,13 @@ import itertools
 start_time = time()
 
 print('path to working folder')
-path = input() + '/'
-# path = './fbalance/'
+# path = input() + '/'
+path = './fbalance/'
 fileList = [name for name in listdir(path) if name.endswith(".3D")]
 fileList.sort()
 
 #params
-step = 10  # file step
+step = 2  # file step
 n = 5 #number of the bins
 num_ps = 5
 axis_count = 1
@@ -50,19 +50,24 @@ for j in range(0,3):
 xlabel = np.linspace(0, n**2, (n**2)+1)
 box_coords = np.asarray(np.transpose(box_coords))
 box_node = np.asarray(np.transpose(box_node))
-
+box_node = np.round(box_node, 2)
+# legend = []
 center_list = (list(itertools.product(box_node[:,0], box_node[:,1], box_node[:,2])))
 center_list = [  np.round(elem,2) for elem in center_list]
 center_list = center_list[0::1]
-center_array = np.asarray(center_list)
+legend = box_node.tolist()
+legend1 = str(legend[0])
+marker_list = ['r-', 'y-', 'g-', 'c-', 'b-',]
+
     
-for k in range(len(center_array[:,0])):
+for k in range(len(box_node[:,0])):
+    print(k)
     filtered = []
     ps_index = []
     len_filtered = []
     t_c = []
     fff = np.zeros(5)
-    center = center_array[k,:]
+    center = box_node[k,:]
     t0, a0 = particleCoordsNew (path, fileList[0])
     for ps in range(num_ps):
         aa0 = np.asarray(a0[ps])
@@ -135,8 +140,8 @@ for k in range(len(center_array[:,0])):
     # fig1 = plt.figure(figsize=(4.5,4.0), dpi=200)
     fontP = FontProperties()
     fontP.set_size('xx-small')
-    # plt.legend(center_list, title='loc', bbox_to_anchor=(1.12, 1.01),loc='upper right', prop=fontP)
-    plt.plot(np_sigma_mean[:,0], np_sigma_mean[:,1], '-')
+    plt.legend(legend, title='loc', bbox_to_anchor=(1.05, 1.01),loc='upper right', prop=fontP)
+    plt.plot(np_sigma_mean[:,0], np_sigma_mean[:,1], marker_list[k])
     # plt.title(str(np.round(center, 2)))
     plt.xlabel('time')
     plt.ylabel('mean sigma')
