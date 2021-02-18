@@ -16,7 +16,7 @@ start_time = time()
 
 print('path to working folder')
 # path = input() + '/'
-path = './fbalance/'
+path = '/home/afabret/data/room_deposition/roomBackUp00002_new/'
 fileList = [name for name in listdir(path) if name.endswith(".3D")]
 fileList.sort()
 
@@ -55,20 +55,19 @@ center_list = [  np.round(elem,2) for elem in center_list]
 center_list = center_list[0::25]
 center_array = np.asarray(center_list)
 
+
 marker_list = ['ro', 'yo', 'go', 'co', 'bo',]
+t0, a0 = particleCoordsNew (path, fileList[0])
 for file in fileList:
     fig, axs = plt.subplots(2, 2,figsize=(7, 7))
     axs[1, 1] = plt.subplot(224, projection='3d')
     for k in range(len(center_array[:,0])):
-    # for k in range(5):
-    
         filtered = []
         ps_index = []
         len_filtered = []
         t_c = []
         fff = np.zeros(5)
         center = box_node[k,:]
-        t0, a0 = particleCoordsNew (path, fileList[0])
         for ps in range(num_ps):
             aa0 = np.asarray(a0[ps])
             for j in range(len(aa0)):
@@ -104,7 +103,7 @@ for file in fileList:
             axs[0, 1].set_title('Y - projection')
             axs[1, 0].plot(data[:,0],data[:,1], marker_list[k], markersize=0.5)
             axs[1, 0].set_title('Z - projection')
-            axs[1, 1].plot(data[:,0],data[:,1], data[:,2], marker_list[k], markersize=0.5)
+            axs[1, 1].plot(data[:,0],data[:,2], data[:,1], marker_list[k], markersize=0.5)
             axs[1, 1].set_title('Isometric view')
             axs[0, 0].set_xlim([-0.5, 0.5])
             axs[0, 0].set_ylim([-0.5, 0.5])

@@ -17,12 +17,12 @@ start_time = time()
 
 print('path to working folder')
 # path = input() + '/'
-path = './fbalance/'
+path = '/home/afabret/data/room_deposition/roomBackUp00002_new/'
 fileList = [name for name in listdir(path) if name.endswith(".3D")]
 fileList.sort()
 
 #params
-step = 2  # file step
+step = 3 # file step
 n = 5 #number of the bins
 num_ps = 5
 axis_count = 1
@@ -60,6 +60,7 @@ legend1 = str(legend[0])
 marker_list = ['r-', 'y-', 'g-', 'c-', 'b-',]
 
     
+t0, a0 = particleCoordsNew (path, fileList[0])
 for k in range(len(box_node[:,0])):
     print(k)
     filtered = []
@@ -68,7 +69,7 @@ for k in range(len(box_node[:,0])):
     t_c = []
     fff = np.zeros(5)
     center = box_node[k,:]
-    t0, a0 = particleCoordsNew (path, fileList[0])
+
     for ps in range(num_ps):
         aa0 = np.asarray(a0[ps])
         for j in range(len(aa0)):
