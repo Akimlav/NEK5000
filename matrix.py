@@ -118,7 +118,7 @@ def build_matrix (choose, tt1, tt2, center):
     for i in range(len(data_t1)):
         A[pt_box_ind_t1[i],pt_box_ind_t2[i]] = A[pt_box_ind_t1[i],pt_box_ind_t2[i]] + 1
     
-    if choose.lower() in ['a', 'all']:
+    if choose.lower() in ['s', 'sphere']:
         title = 'Sphere' + str(center) + ' t1 = ' + str(t1) +  ', t2 = ' + str(t2)
         tit = 'matrix_sphere' + str(center) + '_'+ str(int(t1)) +  '_' + str(int(t2))
     else:
