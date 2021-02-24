@@ -25,7 +25,7 @@ from time import time
 from scipy.stats import norm
 import statistics as st
 import multiprocessing 
-
+import math as m
 # print('enter path to folder with files:')
 # path = input() + '/'
 
@@ -572,4 +572,9 @@ def stuck (case_name, file_ext):
     plt.savefig('adiabatic back.png', dpi = 300)
     # plt.show()
 
-
+def binner(x,y,z,n):
+    ii = m.floor((x + 0.5)/(1/n))+1 # 1D x bin index
+    jj = m.floor((y + 0.5)/(1/n))+1 # 1D y bin index
+    kk = m.floor((z + 0.5)/(1/n))+1 # 1D z bin index
+    ind = (ii + (kk-1) * n + (jj-1) * n**2) - 1
+    return ind
