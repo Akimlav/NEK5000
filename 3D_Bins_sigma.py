@@ -17,14 +17,15 @@ start_time = time()
 
 print('path to working folder')
 # path = input() + '/'
-path = '/home/afabret/data/room_deposition/roomBackUp00002_new/'
+# path = '/home/afabret/data/room_deposition/roomBackUp00002_new/'
+path = './fbalance/'
 fileList = [name for name in listdir(path) if name.endswith(".3D")]
 fileList.sort()
 
 #params
-step = 3 # file step
-n = 5 #number of the bins
-num_ps = 5
+step = 5 # file step
+n = 2 #number of the bins
+num_ps = 1
 axis_count = 1
 fileList = fileList[0::step]
 x0 = -0.5
@@ -68,7 +69,7 @@ for k in range(len(box_node[:,0])):
     len_filtered = []
     t_c = []
     fff = np.zeros(5)
-    center = box_node[k,:]
+    center = box_node[0,:]
 
     for ps in range(num_ps):
         aa0 = np.asarray(a0[ps])
@@ -164,4 +165,9 @@ plt.savefig('mean_sigma_all_boxes' + '.png', dpi=200)
 
 print('Plotting was: %.3f seconds' % (time() - start_time4))
 print('All it was: %.3f seconds'  % (time() - start_time))
+
+
+        
+
+
 
