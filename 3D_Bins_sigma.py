@@ -18,13 +18,13 @@ start_time = time()
 print('path to working folder')
 # path = input() + '/'
 # path = '/home/afabret/data/room_deposition/roomBackUp00002_new/'
-path = './fbalance/'
+path = '../fbalance/'
 fileList = [name for name in listdir(path) if name.endswith(".3D")]
 fileList.sort()
 
 #params
 step = 5 # file step
-n = 2 #number of the bins
+n = 5 #number of the bins
 num_ps = 1
 axis_count = 1
 fileList = fileList[0::step]
@@ -55,7 +55,7 @@ box_node = np.round(box_node, 2)
 # legend = []
 center_list = (list(itertools.product(box_node[:,0], box_node[:,1], box_node[:,2])))
 center_list = [  np.round(elem,2) for elem in center_list]
-center_list = center_list[0::1]
+# center_list = center_list[0::1]
 legend = box_node.tolist()
 legend1 = str(legend[0])
 marker_list = ['r-', 'y-', 'g-', 'c-', 'b-',]
