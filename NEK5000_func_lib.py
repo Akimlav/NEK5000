@@ -675,8 +675,8 @@ def build_matrix (choose, tt1, tt2, n, path, fileList):
                           
             A = matrix(data_t1, data_t2, n)
             
-            b = np.argwhere(A[:,0] > 0)
-            B[b] = A[b]
+            b = np.argwhere(A[:,:] > 0)   
+            B[b[0,0]] = A[b[0,0]]
     elif choose.lower() in ['a', 'all']:
         data_list1 = []
         data_list2 = []
