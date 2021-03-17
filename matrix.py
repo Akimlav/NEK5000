@@ -14,22 +14,26 @@ import itertools
 
 
 # path = input() + '/'
-path = '/home/afabret/data/room_deposition/production_run/roomBackUp00002/'
-# path = '../fbalance/'
+path1 = '/home/afabret/data/room_deposition/production_run/roomBackUp00002/'
+path2 = '/home/afabret/data/room_deposition/production_run/roomBackUp00003/'
+# path1 = '../fbalance/'
+# path2 = '../fbalance2/'
 
-fileList = [name for name in listdir(path) if name.endswith(".3D")]
-fileList.sort()
+fileList1 = [name for name in listdir(path1) if name.endswith(".3D")]
+fileList1.sort()
+fileList2 = [name for name in listdir(path2) if name.endswith(".3D")]
+fileList2.sort()
 
-# inpt =[['a', 0, 1, 5, path, fileList],['s', 0, -1, 5, path, fileList], ['s', 0, 1, 5, path, fileList], ['a', 0, 1, 5, path, fileList]]
-
-inpt = [['a', 0, 50, 5, path, fileList],['a', 0, 1000, 5, path, fileList],['a', 0, 2500, 5, path, fileList],['a', 0, 4000, 5, path, fileList],['a', 0, -1, 5, path, fileList],
-        ['s', 0, 50, 5, path, fileList],['s', 0, 1000, 5, path, fileList],['s', 0, 2500, 5, path, fileList],['s', 0, 4000, 5, path, fileList],['s', 0, -1, 5, path, fileList]]
+# inpt =[['a', 0, 1, 5, path1, path1, fileList1, fileList1],['a', 0, 0, 5, path1, path2, fileList1, fileList2]]
+inpt =[['a', 0, 0, 5, path1, path1, fileList1, fileList1],['a', 0, 2000, 5, path1, path1, fileList1, fileList1],['a', 0, 4000, 5, path1, path1, fileList1, fileList1],
+       ['a', 0, -1, 5, path1, path1, fileList1, fileList1],['a', 0, 2000, 5, path1, path2, fileList1, fileList2],
+       ['a', 0, 4000, 5, path1, path2, fileList1, fileList2],['a', 0, -1, 5, path1, path2, fileList1, fileList2]]
 
 for i in range(len(inpt)):
     print(i)
     t1, t2, B = build_matrix(*inpt[i])
     print(len(B), B.sum())
-    print(B)
+    # print(B)
     if inpt[i][0] == 'a':
         title = 'All particles' + ' t1 = ' + str(t1) +  ', t2 = ' + str(t2)
         tit = 'matrix_all' + '_'+ str(int(t1)) +  '_' + str(int(t2))
@@ -44,3 +48,4 @@ for i in range(len(inpt)):
     fig.tight_layout()
     plt.colorbar(heatmap)
     plt.savefig(tit + '.png', dpi=200)
+    np.savetxt((tit + '.txt'), B)

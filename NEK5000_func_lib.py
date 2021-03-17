@@ -597,7 +597,7 @@ def matrix(data_t1, data_t2, n):
     
     return A
 
-def build_matrix (choose, tt1, tt2, n, path, fileList):
+def build_matrix (choose, tt1, tt2, n, path1, path2, fileList1, fileList2):
     #params
     num_ps = 5
     x0 = -0.5
@@ -605,8 +605,8 @@ def build_matrix (choose, tt1, tt2, n, path, fileList):
     z0 = -0.5
     
     radius = 0.1
-    t1, a1 = particleCoordsNew (path, fileList[tt1])
-    t2, a2 = particleCoordsNew (path, fileList[tt2])
+    t1, a1 = particleCoordsNew (path1, fileList1[tt1])
+    t2, a2 = particleCoordsNew (path2, fileList2[tt2])
     
     t1 = np.round((t1 - 0.1628499834108E+03), 3)
     t2 = np.round((t2 - 0.1628499834108E+03), 3)
@@ -629,7 +629,7 @@ def build_matrix (choose, tt1, tt2, n, path, fileList):
     center_list = (list(itertools.product(box_node[:,0], box_node[:,1], box_node[:,2])))
     center_list = [  np.round(elem,2) for elem in center_list]
     if choose.lower() in ['s', 'sphere']:
-        t0, a0 = particleCoordsNew (path, fileList[0])
+        t0, a0 = particleCoordsNew (path1, fileList1[0])
         for k in range(len(center_list)):
             print(k-125)
             filtered = []
@@ -691,8 +691,8 @@ def build_matrix (choose, tt1, tt2, n, path, fileList):
         for ps in range(1,5):
             data_t1 = np.vstack((data_t1, data_list1[ps]))
             data_t2 = np.vstack((data_t2, data_list2[ps]))
-            
-        B = matrix(data_t1, data_t2, n)
+        
+            B = matrix(data_t1, data_t2, n)			
     else:
         print('wrong input!')
     return t1, t2, B
