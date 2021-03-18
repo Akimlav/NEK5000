@@ -8,30 +8,31 @@ Created on Tue Jan 12 17:25:01 2021
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
-from os import listdir
-from NEK5000_func_lib import particleCoordsNew
+from NEK5000_func_lib import particleCoordsNew, fast_scandir, listfile, find_in_list_of_list
 from time import time
 import itertools
 
 start_time = time()
 
-print('path to working folder')
-# path = input() + '/'
-# path = '/home/afabret/data/room_deposition/roomBackUp00002_new/'
-path = '../fbalance/'
-fileList = [name for name in listdir(path) if name.endswith(".3D")]
-fileList.sort()
+
+dirpath = '/Users/akimlavrinenko/Documents/coding'
+fold_name = 'fbala'
+
+folders = fast_scandir(dirpath)
+folders = [word for word in folders if fold_name in word]
+folders.sort()
+
+listOfFileList, allFileList = listfile(folders)
 
 #params
 step = 5 # file step
 n = 5 #number of the bins
 num_ps = 1
 axis_count = 1
-fileList = fileList[0::step]
+allFileList = allFileList[0::step]
 x0 = -0.5
 y0 = -0.5
 z0 = -0.5
-# center = np.asarray([0.4,0.4,0.0])
 radius = 0.1
 
 box_coords = [[0 for x in range(n+1)] for x in range(3)]
@@ -52,7 +53,6 @@ xlabel = np.linspace(0, n**2, (n**2)+1)
 box_coords = np.asarray(np.transpose(box_coords))
 box_node = np.asarray(np.transpose(box_node))
 box_node = np.round(box_node, 2)
-# legend = []
 center_list = (list(itertools.product(box_node[:,0], box_node[:,1], box_node[:,2])))
 center_list = [  np.round(elem,2) for elem in center_list]
 # center_list = center_list[0::1]
@@ -61,7 +61,7 @@ legend1 = str(legend[0])
 marker_list = ['r-', 'y-', 'g-', 'c-', 'b-',]
 
     
-t0, a0 = particleCoordsNew (path, fileList[0])
+t0, a0 = particleCoordsNew (folders[0] + '/', allFileList[0])
 for k in range(len(box_node[:,0])):
     print(k)
     filtered = []
@@ -92,17 +92,20 @@ for k in range(len(box_node[:,0])):
         ps_index.append(index[0])
     
     start_time2 = time()
-    for file in fileList:
-        t, a = particleCoordsNew (path, file)
-        t = np.round((t - 0.1628499834108E+03), 3)
-        for ps in range(0,num_ps):
-            a_np = np.asarray(a[ps])
-            data = a_np[ps_index[ps]]
-            xedges = box_coords[:,0]
-            yedges = box_coords[:,1]
-            zedges = box_coords[:,2]
-            H, edges = np.histogramdd(data, bins=(xedges, yedges, zedges))
-            t_c.append([t, H])
+    for file in allFileList:
+        ind = find_in_list_of_list(listOfFileList, file)
+        if file in listOfFileList[ind[0]]:
+            path = folders[ind[0]] + '/'
+            t, a = particleCoordsNew (path, file)
+            t = np.round((t - 0.1628499834108E+03), 3)
+            for ps in range(0,num_ps):
+                a_np = np.asarray(a[ps])
+                data = a_np[ps_index[ps]]
+                xedges = box_coords[:,0]
+                yedges = box_coords[:,1]
+                zedges = box_coords[:,2]
+                H, edges = np.histogramdd(data, bins=(xedges, yedges, zedges))
+                t_c.append([t, H])
     
     print('Reading all data was: %.3f seconds' % (time() - start_time2))
     
@@ -111,20 +114,23 @@ for k in range(len(box_node[:,0])):
     tb = [t_c[z:z+(num_ps)] for z in range(0, len(t_c), (num_ps))]
     
     sss = []
-    for file in fileList:
-        for ps in range(num_ps):
-            M = fff[ps]/ n**3
-            s = 0
-            ss = 0
-            sigma = 0
-            for x in range (n):
-                for y in range (n):
-                    for z in range (n):
-                        s = (tb[fileList.index(file)][ps][1][x][y][z] - M)**2
-                        ss = ss + s
-                        tt = tb[fileList.index(file)][ps][0]
-            sigma = ss**0.5/(fff[ps])#*((n**3-1)/n**3)**0.5)
-            sss.append([tt, sigma])
+    for file in allFileList:
+        ind = find_in_list_of_list(listOfFileList, file)
+        if file in listOfFileList[ind[0]]:
+            path = folders[ind[0]] + '/'
+            for ps in range(num_ps):
+                M = fff[ps]/ n**3
+                s = 0
+                ss = 0
+                sigma = 0
+                for x in range (n):
+                    for y in range (n):
+                        for z in range (n):
+                            s = (tb[allFileList.index(file)][ps][1][x][y][z] - M)**2
+                            ss = ss + s
+                            tt = tb[allFileList.index(file)][ps][0]
+                sigma = ss**0.5/(fff[ps])
+                sss.append([tt, sigma])
 
     ts = [sss[z:z+(num_ps)] for z in range(0, len(sss), (num_ps))]
     sigma_mean_list = []
@@ -139,29 +145,17 @@ for k in range(len(box_node[:,0])):
     
     start_time4 = time()
     
-    # fig1 = plt.figure(figsize=(4.5,4.0), dpi=200)
+
     fontP = FontProperties()
     fontP.set_size('xx-small')
     plt.legend(legend, title='loc', bbox_to_anchor=(1.05, 1.01),loc='upper right', prop=fontP)
     plt.plot(np_sigma_mean[:,0], np_sigma_mean[:,1], marker_list[k])
-    # plt.title(str(np.round(center, 2)))
     plt.xlabel('time')
     plt.ylabel('mean sigma')
     plt.yticks(np.arange(0, 1.1, step=0.1))
     plt.grid(True)
     plt.ylim(0, 1.05)
 plt.savefig('mean_sigma_all_boxes' + '.png', dpi=200)
-
-    # fontP = FontProperties()
-    # fontP.set_size('xx-small')
-    
-    # plt.plot(np_sigma_mean[:,0], np_sigma_mean[:,1], '-')
-    # plt.title('logarithmic'+ str(np.round(center, 2)))
-    # plt.xlabel('time')
-    # plt.ylabel('log mean sigma')
-    # plt.yscale('log')
-    # plt.grid(True)
-# plt.savefig('log_mean_sigma_all_boxes' + '.png', dpi=200)
 
 print('Plotting was: %.3f seconds' % (time() - start_time4))
 print('All it was: %.3f seconds'  % (time() - start_time))

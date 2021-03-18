@@ -10,7 +10,8 @@ Created on Wed Jan 13 13:34:30 2021
 #!/usr/bin/python3.8
 
 from sys import argv
-from os import system,remove,cpu_count
+from os import system,remove,cpu_count, listdir, scandir
+
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -696,3 +697,25 @@ def build_matrix (choose, tt1, tt2, n, path1, path2, fileList1, fileList2):
     else:
         print('wrong input!')
     return t1, t2, B
+
+def listfile(folders):
+    allFileList = []
+    listOfFileList = []
+    for folder in folders:
+        fileList = [name for name in listdir(folder) if name.endswith(".3D")]
+        fileList.sort()
+        listOfFileList.append(fileList)
+        allFileList = allFileList + fileList
+    return (listOfFileList, allFileList)
+
+def find_in_list_of_list(mylist, char):
+    for sub_list in mylist:
+        if char in sub_list:
+            return (mylist.index(sub_list), sub_list.index(char))
+    raise ValueError("'{char}' is not in list".format(char = char))
+    
+def fast_scandir(dirname):
+    subfolders= [f.path for f in scandir(dirname) if f.is_dir()]
+    for dirname in list(subfolders):
+        subfolders.extend(fast_scandir(dirname))
+    return subfolders
