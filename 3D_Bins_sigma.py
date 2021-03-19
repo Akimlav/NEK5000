@@ -15,8 +15,8 @@ import itertools
 start_time = time()
 
 
-dirpath = '/Users/akimlavrinenko/Documents/coding'
-fold_name = 'fbala'
+dirpath = '/home/afabret/data/room_deposition/production_run/'
+fold_name = 'roomBackUp'
 
 folders = fast_scandir(dirpath)
 folders = [word for word in folders if fold_name in word]
@@ -25,15 +25,16 @@ folders.sort()
 listOfFileList, allFileList = listfile(folders)
 
 #params
-step = 5 # file step
+step = 10 # file step
 n = 5 #number of the bins
-num_ps = 1
-axis_count = 1
+num_ps = 5
+radius = 0.1
+#axis_count = 1
 allFileList = allFileList[0::step]
+
 x0 = -0.5
 y0 = -0.5
 z0 = -0.5
-radius = 0.1
 
 box_coords = [[0 for x in range(n+1)] for x in range(3)]
 box_node = [[0 for x in range(n)] for x in range(3)]
@@ -57,19 +58,18 @@ center_list = (list(itertools.product(box_node[:,0], box_node[:,1], box_node[:,2
 center_list = [  np.round(elem,2) for elem in center_list]
 # center_list = center_list[0::1]
 legend = box_node.tolist()
-legend1 = str(legend[0])
+
 marker_list = ['r-', 'y-', 'g-', 'c-', 'b-',]
 
     
-t0, a0 = particleCoordsNew (folders[0] + '/', allFileList[0])
+t0, a0 = particleCoordsNew (folders[1] + '/', allFileList[0])
 for k in range(len(box_node[:,0])):
-    print(k)
     filtered = []
     ps_index = []
     len_filtered = []
     t_c = []
     fff = np.zeros(5)
-    center = box_node[0,:]
+    center = box_node[k,:]
 
     for ps in range(num_ps):
         aa0 = np.asarray(a0[ps])
@@ -145,7 +145,6 @@ for k in range(len(box_node[:,0])):
     
     start_time4 = time()
     
-
     fontP = FontProperties()
     fontP.set_size('xx-small')
     plt.legend(legend, title='loc', bbox_to_anchor=(1.05, 1.01),loc='upper right', prop=fontP)
