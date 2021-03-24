@@ -14,7 +14,8 @@ import itertools
 
 start_time = time()
 
-
+# dirpath = '../'
+# fold_name = 'fbala'
 dirpath = '/home/afabret/data/room_deposition/production_run/'
 fold_name = 'roomBackUp'
 
@@ -26,9 +27,9 @@ listOfFileList, allFileList = listfile(folders)
 
 #params
 step = 10 # file step
-n = 5 #number of the bins
+n = 10 #number of the bins
 num_ps = 5
-radius = 0.1
+radius = 0.05
 #axis_count = 1
 allFileList = allFileList[0::step]
 
@@ -59,10 +60,11 @@ center_list = [  np.round(elem,2) for elem in center_list]
 # center_list = center_list[0::1]
 legend = box_node.tolist()
 
-marker_list = ['r-', 'y-', 'g-', 'c-', 'b-',]
+marker_list = ['r-', 'y-', 'g-', 'c-', 'b-','k--', 'm--', 'g--', 'c--', 'b--']
 
     
-t0, a0 = particleCoordsNew (folders[1] + '/', allFileList[0])
+t0, a0 = particleCoordsNew (folders[0] + '/', allFileList[0])
+fig, axs = plt.subplots(3,figsize=(7, 10))
 for k in range(len(box_node[:,0])):
     filtered = []
     ps_index = []
@@ -114,6 +116,7 @@ for k in range(len(box_node[:,0])):
     tb = [t_c[z:z+(num_ps)] for z in range(0, len(t_c), (num_ps))]
     
     sss = []
+    bin_sigma0 = []
     for file in allFileList:
         ind = find_in_list_of_list(listOfFileList, file)
         if file in listOfFileList[ind[0]]:
@@ -129,9 +132,17 @@ for k in range(len(box_node[:,0])):
                             s = (tb[allFileList.index(file)][ps][1][x][y][z] - M)**2
                             ss = ss + s
                             tt = tb[allFileList.index(file)][ps][0]
-                sigma = ss**0.5/(fff[ps])
-                sss.append([tt, sigma])
+                            if file == allFileList[-1]:
+                                bin_sigma0.append(tb[allFileList.index(file)][ps][1][x][y][z])
 
+                sigma = ss**0.5/(fff[ps]*((n**3-1)/n**3)**0.5)
+                sss.append([tt, sigma])
+                
+    binPs = [bin_sigma0[z:z+(n**3)] for z in range(0, len(bin_sigma0), (n**3))]
+    sumBinPs = [binPs[0][i] + binPs[1][i] + binPs[2][i] + binPs[3][i]
+                                          + binPs[4][i] for i in range(len(binPs[0]))]
+    sigmaBin = ((sumBinPs - (sum(fff)/n**3))**2)**0.5/(sum(fff)*((n**3-1)/n**3)**0.5)
+    
     ts = [sss[z:z+(num_ps)] for z in range(0, len(sss), (num_ps))]
     sigma_mean_list = []
     for i in range(len(ts)):
@@ -147,20 +158,26 @@ for k in range(len(box_node[:,0])):
     
     fontP = FontProperties()
     fontP.set_size('xx-small')
-    plt.legend(legend, title='loc', bbox_to_anchor=(1.05, 1.01),loc='upper right', prop=fontP)
-    plt.plot(np_sigma_mean[:,0], np_sigma_mean[:,1], marker_list[k])
-    plt.xlabel('time')
-    plt.ylabel('mean sigma')
-    plt.yticks(np.arange(0, 1.1, step=0.1))
-    plt.grid(True)
-    plt.ylim(0, 1.05)
-plt.savefig('mean_sigma_all_boxes' + '.png', dpi=200)
+    fig.legend(legend, title='loc', bbox_to_anchor=(0.88, 0.88), prop=fontP)
+    axs[0].plot(np_sigma_mean[:,0], np_sigma_mean[:,1], marker_list[k])
+    axs[1].plot(np_sigma_mean[:,0], np.log(np_sigma_mean[:,1]))
+    axs[2].plot(sigmaBin, marker_list[k])
+    axs[0].set_xlabel('time')
+    axs[0].set_ylabel('Mean sigma')
+    axs[1].set_xlabel('time')
+    axs[1].set_ylabel('Log sigma')
+    axs[2].set_xlabel('bin')
+    axs[2].set_ylabel('Local sigma')
+    axs[0].set_yticks(np.arange(0, 1.1, step=0.1))
+    axs[0].grid(True)
+    axs[1].grid(True)
+    axs[2].grid(True)
+plt.savefig('mean_log_sigma_all_boxes' + '.png', dpi=200)
+
 
 print('Plotting was: %.3f seconds' % (time() - start_time4))
 print('All it was: %.3f seconds'  % (time() - start_time))
 
-
-        
 
 
 
