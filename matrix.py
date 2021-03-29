@@ -35,7 +35,7 @@ def pathTwo (ind):
         path2 = folders[path2Ind[0]]
     return path2 + '/'
 
-step = 2000
+step = 2
 R = floor(len(allFileList)/step)
 for i in range(R):
     print(i)
@@ -47,12 +47,12 @@ for i in range(R):
     normalized = B/B.max()  # rescale to between 0 and 1
     corrected = np.power(normalized, 0.5) # try values between 0.5 and 2 as a start point
     # print(B)
-    if inpt[i] == 'a':
+    if inpt[0] == 'a':
         title = 'All particles' + ' t1 = ' + str(t1) +  ', t2 = ' + str(t2)
         tit = 'matrix_all' + '_'+ str(int(t1)) +  '_' + str(int(t2))
         heatmap = plt.pcolor(np.array(((0,1),(0,1))))
         # heatmap = plt.pcolor(B)
-    elif inpt[i] == 's':
+    elif inpt[0] == 's':
         title = 'Sphere'  + ' t1 = ' + str(t1) +  ', t2 = ' + str(t2)
         tit = 'matrix_sphere'  + '_'+ str(int(t1)) +  '_' + str(int(t2))
         # heatmap = plt.pcolor(np.array(((0,30),(0,30))))
