@@ -598,7 +598,7 @@ def matrix(data_t1, data_t2, n):
     
     return A
 
-def build_matrix (choose, tt1, tt2, n, path1, path2, fileList1, fileList2):
+def build_matrix (choose, tt1, tt2, n, path1, path2, fileList):
     #params
     num_ps = 5
     x0 = -0.5
@@ -606,9 +606,12 @@ def build_matrix (choose, tt1, tt2, n, path1, path2, fileList1, fileList2):
     z0 = -0.5
     
     radius = 0.1
-    t1, a1 = particleCoordsNew (path1, fileList1[tt1])
-    t2, a2 = particleCoordsNew (path2, fileList2[tt2])
-    
+    t1, a1 = particleCoordsNew (path1, fileList[tt1])
+    try:
+        t2, a2 = particleCoordsNew (path2, fileList[tt2])
+    except IndexError:
+        t2, a2 = particleCoordsNew (path2, fileList[-1])
+
     t1 = np.round((t1 - 0.1628499834108E+03), 3)
     t2 = np.round((t2 - 0.1628499834108E+03), 3)
     
@@ -630,7 +633,7 @@ def build_matrix (choose, tt1, tt2, n, path1, path2, fileList1, fileList2):
     center_list = (list(itertools.product(box_node[:,0], box_node[:,1], box_node[:,2])))
     center_list = [  np.round(elem,2) for elem in center_list]
     if choose.lower() in ['s', 'sphere']:
-        t0, a0 = particleCoordsNew (path1, fileList1[0])
+        t0, a0 = particleCoordsNew (path1, fileList[0])
         for k in range(len(center_list)):
             print(k-125)
             filtered = []

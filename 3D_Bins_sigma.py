@@ -14,10 +14,10 @@ import itertools
 
 start_time = time()
 
-# dirpath = '../'
-# fold_name = 'fbala'
-dirpath = '/home/afabret/data/room_deposition/production_run/'
-fold_name = 'roomBackUp'
+dirpath = '../'
+fold_name = 'fbala'
+# dirpath = '/home/afabret/data/room_deposition/production_run/'
+# fold_name = 'roomBackUp'
 
 folders = fast_scandir(dirpath)
 folders = [word for word in folders if fold_name in word]
@@ -26,10 +26,10 @@ folders.sort()
 listOfFileList, allFileList = listfile(folders)
 
 #params
-step = 10 # file step
-n = 10 #number of the bins
+step = 3 # file step
+n = 5 #number of the bins
 num_ps = 5
-radius = 0.05
+radius = 0.1
 #axis_count = 1
 allFileList = allFileList[0::step]
 
@@ -65,7 +65,8 @@ marker_list = ['r-', 'y-', 'g-', 'c-', 'b-','k--', 'm--', 'g--', 'c--', 'b--']
     
 t0, a0 = particleCoordsNew (folders[0] + '/', allFileList[0])
 fig, axs = plt.subplots(3,figsize=(7, 10))
-for k in range(len(box_node[:,0])):
+# for k in range(len(box_node[:,0])):
+for k in range(1):
     filtered = []
     ps_index = []
     len_filtered = []
@@ -122,25 +123,25 @@ for k in range(len(box_node[:,0])):
         if file in listOfFileList[ind[0]]:
             path = folders[ind[0]] + '/'
             for ps in range(num_ps):
-                M = fff[ps]/ n**3
                 s = 0
-                ss = 0
                 sigma = 0
                 for x in range (n):
                     for y in range (n):
                         for z in range (n):
-                            s = (tb[allFileList.index(file)][ps][1][x][y][z] - M)**2
-                            ss = ss + s
+                            s += (tb[allFileList.index(file)][ps][1][x][y][z] - fff[ps]/ n**3)**2
                             tt = tb[allFileList.index(file)][ps][0]
-                            if file == allFileList[-1]:
+                            if file == allFileList[0]:
                                 bin_sigma0.append(tb[allFileList.index(file)][ps][1][x][y][z])
 
-                sigma = ss**0.5/(fff[ps]*((n**3-1)/n**3)**0.5)
+                sigma = s**0.5/(fff[ps]*((n**3-1)/n**3)**0.5)
                 sss.append([tt, sigma])
+                # print("_____________________________")
+                # print(sigma)
+                # print("_____________________________")
                 
     binPs = [bin_sigma0[z:z+(n**3)] for z in range(0, len(bin_sigma0), (n**3))]
     sumBinPs = [binPs[0][i] + binPs[1][i] + binPs[2][i] + binPs[3][i]
-                                          + binPs[4][i] for i in range(len(binPs[0]))]
+                                           + binPs[4][i] for i in range(len(binPs[0]))]
     sigmaBin = ((sumBinPs - (sum(fff)/n**3))**2)**0.5/(sum(fff)*((n**3-1)/n**3)**0.5)
     
     ts = [sss[z:z+(num_ps)] for z in range(0, len(sss), (num_ps))]
@@ -149,7 +150,8 @@ for k in range(len(box_node[:,0])):
         sigma_sum = 0
         for j in range(len(ts[0])):
             sigma_sum = sigma_sum + ts[i][j][1]
-            sigma_mean = sigma_sum / len(ts[0])
+        print(sigma_sum)
+        sigma_mean = sigma_sum / len(ts[0])
         sigma_mean_list.append([ts[i][j][0], sigma_mean])
     
     np_sigma_mean = np.asarray(sigma_mean_list)
