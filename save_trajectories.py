@@ -13,8 +13,8 @@ from time import time
 
 start_time = time()
 
-# dirpath = '../'
-# fold_name = 'fbala'
+dirpath = '../data'
+fold_name = 'fbala'
 dirpath = '/home/afabret/data/room_deposition/production_run/'
 fold_name = 'roomBackUp'
 
@@ -28,7 +28,7 @@ listOfFileList, allFileList = listfile(folders)
 step = 1 # file step
 num_ps = 5
 allFileList = allFileList[0::step]
-allFileList = allFileList[:2]
+allFileList = allFileList[:5000]
 
 ls = []
 
@@ -41,6 +41,10 @@ for file in allFileList:
         t = np.round((t - 0.1628499834108E+03), 3)
         flat_list = [item for sublist in a for item in sublist]
         npList = np.asarray(flat_list)
+        npListX = npList[((npList[:,2] > -0.01) & (npList[:,2] < 0.01))]
+        a = abs(len(npListX) - 5000)
+        npList = npListX[:-a]
+        print(len(npList),len(npListX))
         flatList = npList.ravel()
         final = np.append(t, flatList)
         ls.append(final)
