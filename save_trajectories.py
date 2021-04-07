@@ -13,8 +13,8 @@ from time import time
 
 start_time = time()
 
-dirpath = '../data'
-fold_name = 'fbala'
+# dirpath = '../data'
+# fold_name = 'fbala'
 dirpath = '/home/afabret/data/room_deposition/production_run/'
 fold_name = 'roomBackUp'
 
@@ -26,11 +26,15 @@ listOfFileList, allFileList = listfile(folders)
 
 #params
 step = 1 # file step
-num_ps = 5
 allFileList = allFileList[0::step]
-allFileList = allFileList[:5000]
+allFileList = allFileList[:4500]
 
 ls = []
+filtered = []
+t0, a0 = particleCoordsNew (folders[0] + '/', allFileList[0])
+flat_list0 = [item for sublist in a0 for item in sublist]
+flat_list0 = np.asarray(flat_list0)
+index = (np.where((flat_list0[:,2] <= 0.01) & (flat_list0[:,2] >= -0.01)))
 
 start_time2 = time()
 for file in allFileList:
@@ -41,10 +45,7 @@ for file in allFileList:
         t = np.round((t - 0.1628499834108E+03), 3)
         flat_list = [item for sublist in a for item in sublist]
         npList = np.asarray(flat_list)
-        npListX = npList[((npList[:,2] > -0.01) & (npList[:,2] < 0.01))]
-        a = abs(len(npListX) - 5000)
-        npList = npListX[:-a]
-        print(len(npList),len(npListX))
+        npList = npList[index]
         flatList = npList.ravel()
         final = np.append(t, flatList)
         ls.append(final)
