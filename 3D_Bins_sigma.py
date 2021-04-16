@@ -14,10 +14,10 @@ import itertools
 
 start_time = time()
 
-# dirpath = '../'
-# fold_name = 'fbala'
-dirpath = '/home/afabret/data/room_deposition/production_run/'
-fold_name = 'roomBackUp'
+dirpath = '/Users/akimlavrinenko/Dropbox/My Mac (Akims-MacBook-Pro.local)/Documents/coding/data/test_data'
+fold_name = 'fbala'
+# dirpath = '/home/afabret/data/room_deposition/production_run/'
+# fold_name = 'roomBackUp'
 
 folders = fast_scandir(dirpath)
 folders = [word for word in folders if fold_name in word]
@@ -26,10 +26,10 @@ folders.sort()
 listOfFileList, allFileList = listfile(folders)
 
 #params
-step = 50 # file step
-n = 10 #number of the bins
+step = 3 # file step
+n = 20 #number of the bins
 num_ps = 5
-radius = 0.05
+radius = 0.025
 #axis_count = 1
 allFileList = allFileList[0::step]
 
@@ -54,19 +54,17 @@ for j in range(0,3):
 xlabel = np.linspace(0, n**2, (n**2)+1)
 box_coords = np.asarray(np.transpose(box_coords))
 box_node = np.asarray(np.transpose(box_node))
-box_node = np.round(box_node, 2)
+box_node = np.round(box_node, 3)
 center_list = (list(itertools.product(box_node[:,0], box_node[:,1], box_node[:,2])))
-center_list = [  np.round(elem,2) for elem in center_list]
+center_list = [np.round(elem,3) for elem in center_list]
 # center_list = center_list[0::1]
 legend = box_node.tolist()
+cm = plt.get_cmap('tab20')
 
-marker_list = ['r-', 'y-', 'g-', 'c-', 'b-','k--', 'm--', 'g--', 'c--', 'b--']
 
-    
 t0, a0 = particleCoordsNew (folders[0] + '/', allFileList[0])
 fig, axs = plt.subplots(3,figsize=(7, 10))
 for k in range(len(box_node[:,0])):
-# for k in range(1):
     filtered = []
     ps_index = []
     len_filtered = []
@@ -160,16 +158,16 @@ for k in range(len(box_node[:,0])):
     
     fontP = FontProperties()
     fontP.set_size('xx-small')
-    fig.legend(legend, title='loc', bbox_to_anchor=(0.88, 0.88), prop=fontP)
     axs[0].plot(np.log(np_sigma_mean[:,0]), np_sigma_mean[:,1], marker_list[k])
-    axs[1].plot(np.log(np_sigma_mean[:,0]), np.log(np_sigma_mean[:,1]))
-    axs[2].plot(sigmaBin, marker_list[k])
+    axs[1].plot(np.log(np_sigma_mean[:,0]), np.log(np_sigma_mean[:,1]), marker_list[k])
+    # axs[2].hist(, 1000, normed=1, facecolor='green', alpha=0.5)
     axs[0].set_xlabel('log time')
     axs[0].set_ylabel('Mean sigma')
     axs[1].set_xlabel('log time')
     axs[1].set_ylabel('Log sigma')
     axs[2].set_xlabel('bin')
     axs[2].set_ylabel('Ni/N0')
+    fig.legend(legend, title='loc', bbox_to_anchor=(0.88, 0.88), prop=fontP)
     # m = max(np.log(np_sigma_mean[:,1]))*1.1
     # axs[0].set_xlim(0, m)
     axs[0].grid(True)

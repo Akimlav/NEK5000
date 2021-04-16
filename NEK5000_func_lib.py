@@ -696,7 +696,7 @@ def build_matrix (choose, tt1, tt2, n, path1, path2, fileList):
             data_t1 = np.vstack((data_t1, data_list1[ps]))
             data_t2 = np.vstack((data_t2, data_list2[ps]))
         
-            B = matrix(data_t1, data_t2, n)			
+            B = matrix(data_t1, data_t2, n)
     else:
         print('wrong input!')
     return t1, t2, B
