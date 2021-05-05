@@ -8,9 +8,9 @@ Created on Wed Apr 21 12:34:56 2021
 
 import numpy as np
 from NEK5000_func_lib import particleCoordsNew, fast_scandir, listfile, find_in_list_of_list
+import matplotlib.pyplot as plt
 
-
-# dirpath = '/Users/akimlavrinenko/Documents/coding/data/test_data'
+# dirpath = '/home/akim/coding/data'
 # fold_name = 'fbala'
 dirpath = '/home/afabret/data/room_deposition/production_run/'
 fold_name = 'roomBackUp'
@@ -22,9 +22,9 @@ folders.sort()
 listOfFileList, allFileList = listfile(folders)
 
 #params
-step = 2 # file step
+step = 10 # file step
 allFileList = allFileList[0::step]
-allFileList = allFileList[:3000]
+# allFileList = allFileList[:3000]
 
 n = 10 #number of the bins
 num_ps = 5
@@ -77,25 +77,30 @@ for ps in range(num_ps): #getting indexes of spheres for all sizes
         count += size
     index = np.where(np.isin(aa0[:,1], np.asarray(ps_filtered[ps])))
     ps_index.append(index[0])
-
+ls = []
+tl = []
 for file in allFileList:
+    
     ind = find_in_list_of_list(listOfFileList, file)
     if file in listOfFileList[ind[0]]:
         path = folders[ind[0]] + '/'
         t, a = particleCoordsNew (path, file)
         t = np.round((t - 0.1628499834108E+03), 3)
-        ls = []
+        ln = []
         for ps in range(len(ps_index)):
-            flat_list = [item for sublist in a for item in sublist]
+            nnn = np.asarray(a[ps])
+            nn = nnn[ps_index[ps]]
+            ln.append(nn)
+            flat_list = [item for sublist in ln for item in sublist]
             npList = np.asarray(flat_list)
-            npList = npList[ps_index[ps]]
             flatList = npList.ravel()
-            ls.append(flatList)
-    ls = np.concatenate(ls, axis=0)
-    ls = np.reshape(ls, (-1, 1))
-    t = np.reshape(t, (-1, 1))
-    data = np.concatenate((t, ls), axis = 0)
-    data = data.reshape(-1)
-    final.append(data)
-        
-np.savetxt('sphere_trajectory.dat', final)
+        ls.append(flatList)
+        tl.append(t)
+
+ls = np.asarray(ls)
+tl = np.asarray(tl)
+
+t = np.reshape(tl, (len(ls), 1))
+data = np.concatenate((t, ls), axis = 1)
+
+np.savetxt('sphere_trajectory.dat', data)
