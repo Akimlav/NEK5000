@@ -52,55 +52,57 @@ box_node = np.asarray(np.transpose(box_node))
 
 t0, a0 = particleCoordsNew (folders[1] + '/', allFileList[0])
 
-filtered = []
-ps_index = []
-len_filtered = []
-final = []
-fff = np.zeros(5)
-center = box_node[0,:]
-for ps in range(num_ps): #getting indexes of spheres for all sizes
-    aa0 = np.asarray(a0[ps])
-    for j in range(len(aa0)):
-        r1 = ((aa0[j,0] - center[0])**2 + (aa0[j,1] - center[1])**2 + (aa0[j,2] - center[2])**2)**0.5
-        if r1 <= radius:
-            filtered.append(aa0[j,:])
-    len_filtered.append(len(filtered))
-    if len(len_filtered) == 1:
-        fff[ps] = len_filtered[ps]
-    else:
-        fff[ps] = len_filtered[ps] - len_filtered[ps-1]
-    fff = fff.astype(int)
+for k in range(n):
+    center = box_node[k,:]
+    filtered = []
+    fff = np.zeros(5)
+    ps_index = []
+    len_filtered = []
+    final = []
+    ls = []
+    tl = []
     ps_filtered = []
-    count = 0
-    for size in (fff):
-        ps_filtered.append([filtered[i+count] for i in range(size)])
-        count += size
-    index = np.where(np.isin(aa0[:,1], np.asarray(ps_filtered[ps])))
-    ps_index.append(index[0])
-ls = []
-tl = []
-for file in allFileList:
+    for ps in range(num_ps): #getting indexes of spheres for all sizes
+        aa0 = np.asarray(a0[ps])
+        for j in range(len(aa0)):
+            r1 = ((aa0[j,0] - center[0])**2 + (aa0[j,1] - center[1])**2 + (aa0[j,2] - center[2])**2)**0.5
+            if r1 <= radius:
+                filtered.append(aa0[j,:])
+        len_filtered.append(len(filtered))
+        if len(len_filtered) == 1:
+            fff[ps] = len_filtered[ps]
+        else:
+            fff[ps] = len_filtered[ps] - len_filtered[ps-1]
+        fff = fff.astype(int)
+
+        count = 0
+        for size in (fff):
+            ps_filtered.append([filtered[i+count] for i in range(size)])
+            count += size
+        index = np.where(np.isin(aa0[:,1], np.asarray(ps_filtered[ps])))
+        ps_index.append(index[0])
+
+    for file in allFileList:
+        ind = find_in_list_of_list(listOfFileList, file)
+        if file in listOfFileList[ind[0]]:
+            path = folders[ind[0]] + '/'
+            t, a = particleCoordsNew (path, file)
+            t = np.round((t - 0.1628499834108E+03), 3)
+            ln = []
+            for ps in range(len(ps_index)):
+                nnn = np.asarray(a[ps])
+                nn = nnn[ps_index[ps]]
+                ln.append(nn)
+                flat_list = [item for sublist in ln for item in sublist]
+                npList = np.asarray(flat_list)
+                flatList = npList.ravel()
+            ls.append(flatList)
+            tl.append(t)
     
-    ind = find_in_list_of_list(listOfFileList, file)
-    if file in listOfFileList[ind[0]]:
-        path = folders[ind[0]] + '/'
-        t, a = particleCoordsNew (path, file)
-        t = np.round((t - 0.1628499834108E+03), 3)
-        ln = []
-        for ps in range(len(ps_index)):
-            nnn = np.asarray(a[ps])
-            nn = nnn[ps_index[ps]]
-            ln.append(nn)
-            flat_list = [item for sublist in ln for item in sublist]
-            npList = np.asarray(flat_list)
-            flatList = npList.ravel()
-        ls.append(flatList)
-        tl.append(t)
-
-ls = np.asarray(ls)
-tl = np.asarray(tl)
-
-t = np.reshape(tl, (len(ls), 1))
-data = np.concatenate((t, ls), axis = 1)
-
-np.savetxt('sphere_trajectory.dat', data)
+    ls = np.asarray(ls)
+    tl = np.asarray(tl)
+    
+    t = np.reshape(tl, (len(ls), 1))
+    data = np.concatenate((t, ls), axis = 1)
+    
+    np.savetxt('sphere_trajectory_' + str(k) + '.dat', data)
