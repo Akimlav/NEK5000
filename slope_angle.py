@@ -13,7 +13,7 @@ from time import time
 import itertools
 from scipy.stats import norm
 import statistics as st
-from matplotlib.font_manager import FontProperties
+
 
 def find_nearest(array, value):
     array = np.asarray(array)
