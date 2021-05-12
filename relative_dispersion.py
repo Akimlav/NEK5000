@@ -12,7 +12,7 @@ from matplotlib.font_manager import FontProperties
 
 #params
 n = 10 #number of the bins
-step = 100
+step = 5
 x0 = -0.5
 y0 = -0.5
 z0 = -0.5
@@ -25,6 +25,9 @@ box_coords[1][0] = y0
 box_coords[2][0] = z0
 
 delta = 1/n
+path = '/home/akim/coding/data/sphere_trajectories'
+
+
 
 for j in range(0,3):
     for i in range(1,n+1):
@@ -39,15 +42,17 @@ legend = box_node.tolist()
 
 cm = plt.get_cmap('tab20')
 
-for n in range(3):
-    data = np.genfromtxt('/Users/akimlavrinenko/Documents/coding/data/room_data/sphere_trajectory_' + str(n) + '.dat')
-    print(n)
-    x = data[::1,1::step]
-    y = data[::1,2::step]
-    z = data[::1,3::step]
-    time = data[::1, 0]
+for n in range(10):
+    data = np.genfromtxt(path + '/sphere_trajectory_' + str(n) + '.dat')
+    print(n, np.shape(data))
+    x = data[::step,1::3]
+    y = data[::step,2::3]
+    z = data[::step,3::3]
+    time = data[::step, 0]
     d2List = []
-    for t in range(len(x)):
+    # for t in range(len(time)):
+    for t in range(10):
+        print(t)
         ll = []
         for num in range(len(x[0,:])):
             xd = [(number - x[t,num])**2 for number in x[t,:]]
@@ -61,10 +66,14 @@ for n in range(3):
         d2List.append(d2)
         # print(d2)
         
-    plt.plot(np.log(time), np.log(d2List))
-    plt.xlabel('log t, [s]')
-    plt.ylabel('log D^2, [m^2]')
-    plt.grid()
-    plt.legend(legend, title='location', bbox_to_anchor=(0.9, 0.67))
-# plt.savefig('log_relative_dispersion.png', dpi=150)
-plt.show()
+        plt.plot(x[t,:],y[t,:], '.')
+        plt.xlim(-0.5,0.5)
+        plt.ylim(-0.5,0.5)
+        plt.show()
+    # plt.plot(np.log10(time), np.log10(d2List))
+    # plt.xlabel('log t, [s]')
+    # plt.ylabel('log D^2, [m^2]')
+    # plt.grid(True)
+    # plt.tight_layout()
+    # plt.legend(legend, title='location', bbox_to_anchor=(0.9, 0.67))
+# plt.savefig('log10_relative_dispersion.png', dpi=150)
