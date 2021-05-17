@@ -745,3 +745,10 @@ def estimate_coef(x, y):
     b_0 = m_y - b_1*m_x
  
     return (b_0, b_1)
+
+def part(fp,lp, data):
+    ref_point_s = find_nearest(data, fp)
+    ref_point_e = find_nearest(data, lp)
+    rp = [ref_point_s, ref_point_e]
+    ind = np.where(np.isin(data, rp))
+    return ind
