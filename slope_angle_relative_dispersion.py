@@ -74,7 +74,12 @@ for n in range(10):
         d2List.append(d2)
     print(n)
     lll.append(d2List)
-    # time  = np.reshape(time, (-1, 1))
+arr = np.asarray(lll)
+arr = arr.T
+time  = np.reshape(time, (-1, 1))
+data = np.concatenate((time,arr), axis=1)
+print(np.shape(data))
+np.savetxt('d2.dat', data)
     # print(np.shape(time))
     # arr = np.asarray(lll[0])
     # print(np.shape(arr))
