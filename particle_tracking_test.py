@@ -14,7 +14,7 @@ from matplotlib.font_manager import FontProperties
 
 start_time = time.time()
 
-path = '/Users/akimlavrinenko/Documents/coding/data/room_data/'
+path = '/home/akim/coding/data/room/part_stuck/'
 case_name = 'part'
 file_ext = 'stuck' #extension
 
@@ -38,7 +38,7 @@ for i in A:
 
 for data in aList:
     num_rows, num_cols = data.shape
-    
+    np.savetxt('sim_' + str(data[0,2]) + '.dat', data)
     hot_wall = [data[i,:] for i in range (0, num_rows) if data[i,3] == -0.5]
     cold_wall = [data[i,:] for i in range (0, num_rows) if data[i,3] == 0.5]
     cold_ceiling = [data[i,:] for i in range (0, num_rows) if data[i,4] == 0.5]
@@ -152,7 +152,7 @@ for data in aList:
     plt.text(0, -0.615, text, horizontalalignment='center', 
              verticalalignment='center')
     
-    plt.savefig('stuck_particles_' +str(data[0,2]) + '.png', dpi=150)
+    # plt.savefig('stuck_particles_' +str(data[0,2]) + '.png', dpi=150)
     plt.show()
     
 start_time2 = time.time() - start_time
