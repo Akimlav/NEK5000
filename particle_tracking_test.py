@@ -14,14 +14,9 @@ from matplotlib.font_manager import FontProperties
 
 start_time = time.time()
 
-path = '/home/akim/coding/data/room/part_stuck/'
-case_name = 'part'
+path = '/Users/akimlavrinenko/Documents/coding/data/room_data/thatcher_deposition/'
+case_name = 'part_01_12'
 file_ext = 'stuck' #extension
-
-#reading data  
-f1 = open(path + case_name + '.' + file_ext, 'r')
-# n_p = int(f1.readline())  #counts number of probes (reads first line in file)
-f1.close()
 
 #data proccesing
 dataOrig = np.genfromtxt(path + case_name + '.' + file_ext, skip_header = 0, invalid_raise = False)
@@ -38,7 +33,6 @@ for i in A:
 
 for data in aList:
     num_rows, num_cols = data.shape
-    np.savetxt('sim_' + str(data[0,2]) + '.dat', data)
     hot_wall = [data[i,:] for i in range (0, num_rows) if data[i,3] == -0.5]
     cold_wall = [data[i,:] for i in range (0, num_rows) if data[i,3] == 0.5]
     cold_ceiling = [data[i,:] for i in range (0, num_rows) if data[i,4] == 0.5]
@@ -53,26 +47,6 @@ for data in aList:
     adiabatic_front = np.array(adiabatic_front)
     adiabatic_back = np.array(adiabatic_back)
 
-    # ind = []
-    # for i in range(1,len(data3)):
-    #     a = data3[:,1][i-1] - data3[:,1][i]
-    #     if a > 0:
-    #         print(i,a)
-            
-    # index = np.where(np.isin())
-    # indList = []
-    # for i in ind:
-    #     for j in range(i,len(data)):
-    #         a = data[i,1] - data[j,1]
-    #         if a > 0:
-    #             index = np.where(np.isin(data[:,1], data[j]))
-    #             indList.append(np.asarray(index[0][0]))
-        
-    # indList = np.asarray(indList)
-    
-    # data3 = np.delete(data3,2076, axis=0)
-    
-    
     
     fig, axs = plt.subplots(6, figsize=(5,30))
     fontP = FontProperties()
@@ -145,14 +119,14 @@ for data in aList:
         print('adiabatic back wall is empty')
     
     text = 'Total amount of particles are ' + str(len(data))
-    size = 'Diameter ' + str(data[0,2])
+    size = 'Diameter ' + str(np.round((data[0,2] * 1.22 * 1e6), 2))
     fig.tight_layout()
     plt.text(0, 6.47 , size, horizontalalignment='center', 
              verticalalignment='center')
     plt.text(0, -0.615, text, horizontalalignment='center', 
              verticalalignment='center')
     
-    # plt.savefig('stuck_particles_' +str(data[0,2]) + '.png', dpi=150)
+    # plt.savefig('stuck_particles_' + str(np.round((data[0,2] * 1.22 * 1e6), 2)) + '.png', dpi=150)
     plt.show()
     
 start_time2 = time.time() - start_time

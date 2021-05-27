@@ -38,7 +38,7 @@ for i in range(5):
     cold_ceiling = [simulation[i,:] for i in range (0, num_rows) if simulation[i,4] == 0.5]
     hot_floor = [simulation[i,:] for i in range (0, num_rows) if simulation[i,4] == -0.5]
     
-    t = 198.5
+    t = max(simulation[:,1]) - min(simulation[:,1])
     
     vd_cw = len(cold_wall)/55000 * 1/t * 1.10164
     vd_cc = len(cold_ceiling)/55000 * 1/t * 1.10164
@@ -70,7 +70,7 @@ for i in range(5):
 axs[4].text(0.5, -4.8, walls, horizontalalignment='center',
                 verticalalignment='center', transform=axs[0].transAxes)
 fig.tight_layout()
-plt.savefig('particle_deposition.png', dpi=150)
+plt.savefig('particle_deposition_rBu12.png', dpi=150)
 plt.show()
 
 start_time2 = time.time() - start_time
