@@ -158,8 +158,8 @@ for k in range(len(box_node[:,0])):
     
     fontP = FontProperties()
     fontP.set_size('xx-small')
-    axs[0].plot(np.log(np_sigma_mean[:,0]), np_sigma_mean[:,1], marker_list[k])
-    axs[1].plot(np.log(np_sigma_mean[:,0]), np.log(np_sigma_mean[:,1]), marker_list[k])
+    axs[0].plot(np.log(np_sigma_mean[:,0]), np_sigma_mean[:,1])
+    axs[1].plot(np.log(np_sigma_mean[:,0]), np.log(np_sigma_mean[:,1])i)
     # axs[2].hist(, 1000, normed=1, facecolor='green', alpha=0.5)
     axs[0].set_xlabel('log time')
     axs[0].set_ylabel('Mean sigma')

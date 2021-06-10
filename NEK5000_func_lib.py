@@ -201,6 +201,23 @@ def particleCoordsNew (path, fileName):
     
     return(time, allp)
 
+def particleCoordsForces (path, fileName):
+    time,pdata = readParticleFile(str(path) + str(fileName))
+    
+    fp = []
+            
+    for ibatch in range(0,pdata.shape[0]):
+        for ipart in range(0,pdata.shape[2]):
+            for ps in range(0,pdata.shape[1]):
+                xpart = pdata[ibatch,ps,ipart]['xp']
+                fpart = pdata[ibatch,ps,ipart][7]
+                data = np.concatenate((xpart, fpart), axis = 0)
+                fp.append(data)
+
+    allp = [fp[z:z+pdata.shape[2]] for z in range(0, len(fp), pdata.shape[2])]
+    
+    return(time, allp)
+
 def plotVideo (choose, n, Dimension, particleSize, center, radius, plotsmbl):
     start_time = time()
     xyzz = particleCoords(path, fileList[0], particleSize)
