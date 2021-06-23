@@ -12,7 +12,7 @@ from NEK5000_func_lib import particleCoordsForces, readParticleFile
 
 
 path = '/Users/akimlavrinenko/Documents/coding/data/room_data/'
-fileName = 'fbalance01910.3D'
+fileName = 'fbalance01937.3D'
 
 
 t, f = particleCoordsForces(path, fileName)
