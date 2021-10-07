@@ -8,12 +8,12 @@ Created on Wed Apr 21 12:34:56 2021
 
 import numpy as np
 from NEK5000_func_lib import particleCoordsNew, fast_scandir, listfile, find_in_list_of_list
-import matplotlib.pyplot as plt
+
 # /Users/akimlavrinenko/Documents/coding/data/room_data
-dirpath = '/Users/akimlavrinenko/Documents/coding/data'
-fold_name = 'room_data'
-# dirpath = '/home/afabret/data/room_deposition/production_run/'
-# fold_name = 'roomBackUp'
+#dirpath = '/Users/akimlavrinenko/Documents/coding/data'
+#fold_name = 'room_data'
+dirpath = '/home/afabret/data/room_deposition/production_run/'
+fold_name = 'roomBackUp'
 
 folders = fast_scandir(dirpath)
 folders = [word for word in folders if fold_name in word]
@@ -22,7 +22,7 @@ folders.sort()
 listOfFileList, allFileList = listfile(folders)
 
 #params
-step = 1 # file step
+step = 2 # file step
 allFileList = allFileList[0::step]
 # allFileList = allFileList[:3000]
 
@@ -52,7 +52,7 @@ box_coords = np.round(box_coords[[1,5],:],1)
 
 box_node = np.asarray(np.transpose(box_node))
 
-t0, a0 = particleCoordsNew (folders[0] + '/', allFileList[0])
+t0, a0 = particleCoordsNew (folders[1] + '/', allFileList[0])
 
 for k in range(2):
     center = box_coords[k,:]
@@ -90,7 +90,8 @@ for k in range(2):
         if file in listOfFileList[ind[0]]:
             path = folders[ind[0]] + '/'
             t, a = particleCoordsNew (path, file)
-            t = np.round((t - 0.1628499834108E+03), 3)
+            t = np.round((t - 162.85019576495637), 3)
+            print(t)
             ln = []
             for ps in range(len(ps_index)):
                 nnn = np.asarray(a[ps])
@@ -108,4 +109,4 @@ for k in range(2):
     t = np.reshape(tl, (len(ls), 1))
     data = np.concatenate((t, ls), axis = 1)
     
-    np.savetxt('sphere_trajectory_' + str(box_coords[k,:]) + '.dat', data)
+    np.savetxt('10_p_sphere_trajectory_' + str(box_coords[k,:]) + '.dat', data)
