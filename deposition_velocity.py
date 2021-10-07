@@ -30,7 +30,7 @@ for i in range(5):
     xl = (0,4)
     experiment = np.delete(experiment,(10), axis=0)
     simulation = np.genfromtxt(path + 'sim_' + str(i) + '.dat')
-    
+    alex = np.genfromtxt(path + 'alex.dat')
     num_rows, num_cols = simulation.shape
     
     hot_wall = [simulation[i,:] for i in range (0, num_rows) if simulation[i,3] == -0.5]
@@ -46,7 +46,12 @@ for i in range(5):
     vd_hf = len(hot_floor)/55000 * 1/t * 1.10164
     print(vd_cw,vd_cc, vd_hw, vd_hf)
     walls = 'hot floor         hot wall         cold ceiling       cold wall'
+    # Left01,Right01,Floor01,Ceiling01,Back01,Fore01 = 0, 5.1294e-06, 0, 6.104e-06, 9.2329e-07, 2.5647e-07
     
+    alex1 = np.array(((0, alex[i,2]),(1, alex[i,2])))
+    alex2 = np.array(((1, alex[i,0]),(2, alex[i,0])))
+    alex3 = np.array(((2, alex[i,3]),(3, alex[i,3])))
+    alex4 = np.array(((3, alex[i,1]),(4, alex[i,1])))
     sim1 = np.array(((0,vd_hf),(1,vd_hf)))
     sim2 = np.array(((1,vd_hw),(2,vd_hw)))
     sim3 = np.array(((2,vd_cc),(3,vd_cc)))
@@ -56,10 +61,14 @@ for i in range(5):
 
     
     axs[i].plot(experiment[:,0], experiment[:,1],'ro', markersize = 2)
-    axs[i].plot(sim1[:,0], sim1[:,1], 'b-')
-    axs[i].plot(sim2[:,0], sim2[:,1], 'b-')
-    axs[i].plot(sim3[:,0], sim3[:,1], 'b-')
-    axs[i].plot(sim4[:,0], sim4[:,1], 'b-')
+    axs[i].plot(alex1[:,0], alex1[:,1], 'co-')
+    axs[i].plot(alex2[:,0], alex2[:,1], 'co-')
+    axs[i].plot(alex3[:,0], alex3[:,1], 'co-')
+    axs[i].plot(alex4[:,0], alex4[:,1], 'co-')
+    axs[i].plot(sim1[:,0], sim1[:,1], 'b--')
+    axs[i].plot(sim2[:,0], sim2[:,1], 'b--')
+    axs[i].plot(sim3[:,0], sim3[:,1], 'b--')
+    axs[i].plot(sim4[:,0], sim4[:,1], 'b--')
     axs[i].plot(xl,dl, '--')
     axs[i].set_yscale('log')
     axs[i].set_xticks(xticks)
@@ -70,7 +79,7 @@ for i in range(5):
 axs[4].text(0.5, -4.8, walls, horizontalalignment='center',
                 verticalalignment='center', transform=axs[0].transAxes)
 fig.tight_layout()
-plt.savefig('particle_deposition_rBu12.png', dpi=150)
+plt.savefig('particle_deposition_alex.png', dpi=150)
 plt.show()
 
 start_time2 = time.time() - start_time
