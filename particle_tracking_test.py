@@ -13,9 +13,9 @@ from matplotlib.font_manager import FontProperties
 #data[i,j] - i for row, j for column
 
 start_time = time.time()
-
-path = '/Users/akimlavrinenko/Documents/coding/data/room_data/thatcher_deposition/'
-case_name = 'part_01_12'
+# path = '/Users/akimlavrinenko/Documents/coding/data/room_data/thatcher_deposition/'
+path = '/home/akim/coding/data/room/thatcher_deposition/'
+case_name = 'part_refined'
 file_ext = 'stuck' #extension
 
 #data proccesing
@@ -86,7 +86,7 @@ for data in aList:
         print('cold ceiling is empty')
     
     if len(hot_floor) > 0:
-        axs[3].plot(hot_floor[:,3],hot_floor[:,5],'ro')
+        axs[3].plot(hot_floor[:,3],hot_floor[:,5],'ro', markersize=3)
         axs[3].grid(True)
         axs[3].set_xlabel('Z')
         axs[3].set_ylabel('X')
@@ -126,7 +126,7 @@ for data in aList:
     plt.text(0, -0.615, text, horizontalalignment='center', 
              verticalalignment='center')
     
-    # plt.savefig('stuck_particles_' + str(np.round((data[0,2] * 1.22 * 1e6), 2)) + '.png', dpi=150)
+    plt.savefig('stuck_particles_' + str(np.round((data[0,2] * 1.22 * 1e6), 2)) + '.png', dpi=150)
     plt.show()
     
 start_time2 = time.time() - start_time
