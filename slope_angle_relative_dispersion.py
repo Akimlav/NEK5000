@@ -79,7 +79,7 @@ arr = arr.T
 time  = np.reshape(time, (-1, 1))
 data = np.concatenate((time,arr), axis=1)
 print(np.shape(data))
-np.savetxt('d2.dat', data)
+# np.savetxt('d2.dat', data)
     # print(np.shape(time))
     # arr = np.asarray(lll[0])
     # print(np.shape(arr))
@@ -109,9 +109,9 @@ np.savetxt('d2.dat', data)
     
     
     # plt.plot(x[t,:],y[t,:], '.')
-        # plt.xlim(-0.5,0.5)
-        # plt.ylim(-0.5,0.5)
-        # plt.show()
+    #     plt.xlim(-0.5,0.5)
+    #     plt.ylim(-0.5,0.5)
+    #     plt.show()
 
     # axs[0].plot(np.log10(time), np.log10(d2List),color = cm(n))
     # # axs[0].plot(t1,r1)

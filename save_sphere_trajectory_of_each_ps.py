@@ -5,15 +5,13 @@ Created on Wed Apr 21 12:34:56 2021
 
 @author: akimlavrinenko
 """
-
 import numpy as np
 from NEK5000_func_lib import particleCoordsNew, fast_scandir, listfile, find_in_list_of_list
-import matplotlib.pyplot as plt
-# /Users/akimlavrinenko/Documents/coding/data/room_data
-dirpath = '/Users/akimlavrinenko/Documents/coding/data/test_data'
-fold_name = 'fbalance'
-# dirpath = '/home/afabret/data/room_deposition/production_run/'
-# fold_name = 'roomBackUp'
+
+# dirpath = '/Users/akimlavrinenko/Documents/coding/data/test_data'
+# fold_name = 'fbalance'
+dirpath = '/home/afabret/data/room_deposition/production_run/'
+fold_name = 'roomBackUp'
 
 folders = fast_scandir(dirpath)
 folders = [word for word in folders if fold_name in word]
@@ -22,9 +20,8 @@ folders.sort()
 listOfFileList, allFileList = listfile(folders)
 
 #params
-step = 1 # file step
+step = 3 # file step
 allFileList = allFileList[0::step]
-# allFileList = allFileList[:3000]
 
 n = 10 #number of the bins
 num_ps = 5
@@ -48,13 +45,11 @@ for j in range(0,3):
         box_node[j][i-1] = (box_coords[j][i-1] + box_coords[j][i])/2
 
 box_coords = np.asarray(np.transpose(box_coords))
-# box_coords = np.round(box_coords[[1,5],:],1)
-
 box_node = np.asarray(np.transpose(box_node))
 
 t0, a0 = particleCoordsNew (folders[0] + '/', allFileList[0])
 
-for k in range(2):
+for k in range(n):
     center = box_node[k,:]
     filtered = []
     fff = np.zeros(5)
@@ -76,7 +71,6 @@ for k in range(2):
         else:
             fff[ps] = len_filtered[ps] - len_filtered[ps-1]
         fff = fff.astype(int)
-        print(fff)
     
         count = 0
         for size in (fff):
@@ -85,29 +79,37 @@ for k in range(2):
         index = np.where(np.isin(aa0[:,1], np.asarray(ps_filtered[ps])))
         ps_index.append(index)
     
+    tln = []
     for file in allFileList:
         ind = find_in_list_of_list(listOfFileList, file)
         if file in listOfFileList[ind[0]]:
             path = folders[ind[0]] + '/'
             t, a = particleCoordsNew (path, file)
-            t = np.round((t - 0.1628499834108E+03), 3)
+            t = np.round((t - t0), 3)
             ln = []
+            
             for ps in range(len(ps_index)):
                 nnn = np.asarray(a[ps])
                 nn = nnn[ps_index[ps]]
-                # print(len(nn))
-                ln.append(nn)
-                flat_list = [item for sublist in ln for item in sublist]
-                npList = np.asarray(flat_list)
-                flatList = npList.ravel()
-            ls.append(flatList)
-            tl.append(t)
+                flatPs = nn.ravel()
+                ln.append(flatPs)
     
-    ls = np.asarray(ls)
-    tl = np.asarray(tl)
+        tln.append(ln)
+        tl.append(t)
+    mStep = []
+    for ps in range(len(ps_index)):
+        for step in tln:
+            m = step[ps]
+            mStep.append(m)
     
-    t = np.reshape(tl, (len(ls), 1))
-    data = np.concatenate((t, ls), axis = 1)
-    print(np.shape(data))
+    for i in range(len(ps_index)):
+        b = mStep[i*len(tln):len(tln)*(i+1)]
+        b = np.asarray(b)
     
-    # np.savetxt('sphere_trajectory_' + str(box_coords[k,:]) + '.dat', data)
+        ls = np.asarray(b)
+        tl = np.asarray(tl)
+        
+        t = np.reshape(tl, (len(ls), 1))
+        data = np.concatenate((t, ls), axis = 1)
+        
+        np.savetxt('sphr_trj_c_' + str(k) + '_ps_' + str(i) + '.dat', data)
