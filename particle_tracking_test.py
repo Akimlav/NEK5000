@@ -14,7 +14,7 @@ from matplotlib.font_manager import FontProperties
 
 start_time = time.time()
 # path = '/Users/akimlavrinenko/Documents/coding/data/room_data/thatcher_deposition/'
-path = '/home/akim/coding/data/room/thatcher_deposition/'
+path = './'
 case_name = 'part_refined'
 file_ext = 'stuck' #extension
 
