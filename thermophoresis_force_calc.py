@@ -74,13 +74,13 @@ for i in range(2,5):
     hot_floor = np.array(hot_floor)
     adiabatic_front = np.array(adiabatic_front)
     adiabatic_back = np.array(adiabatic_back)
-    print(len(hot_floor))
+    # print(len(hot_floor))
     for j in hot_floor[:,10]:
         # print(i, j)
         thph = j * n_th[i]
         thphList.append(thph)
     m = np.mean(thphList)
-    print(m)
+    print(round((A[i]*1.22e6), 3), '-', round(m,2))
     plt.plot(thphList)
     # plt.plot(A[i]*1.22, m, 'o')
 plt.show()

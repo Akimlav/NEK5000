@@ -33,7 +33,7 @@ for i in range(5):
     xl = (0,4)
     # experiment = np.delete(experiment,(10), axis=0)
     simulation = np.genfromtxt('./' + 'ps_rbu23_' + str(i) + '.dat')
-    alex = np.genfromtxt(path + 'alex.dat')
+    alex = np.genfromtxt(path + 'depo_velocity.txt')
     num_rows, num_cols = simulation.shape
     
     hot_wall = [simulation[i,:] for i in range (0, num_rows) if simulation[i,3] == -0.5]
@@ -78,10 +78,10 @@ for i in range(5):
     axs[i].plot(sim3[:,0], sim3[:,1], 'b-')
     axs[i].plot(sim4[:,0], sim4[:,1], 'b-')
 
-    # axs[i].plot(alex1[:,0], alex1[:,1], 'co-')
-    # axs[i].plot(alex2[:,0], alex2[:,1], 'co-')
-    # axs[i].plot(alex3[:,0], alex3[:,1], 'co-')
-    # axs[i].plot(alex4[:,0], alex4[:,1], 'co-')
+    axs[i].plot(alex1[:,0], alex1[:,1], 'co-')
+    axs[i].plot(alex2[:,0], alex2[:,1], 'co-')
+    axs[i].plot(alex3[:,0], alex3[:,1], 'co-')
+    axs[i].plot(alex4[:,0], alex4[:,1], 'co-')
     axs[i].plot(sim1[:,0], sim1[:,1], 'b--')
     axs[i].plot(sim2[:,0], sim2[:,1], 'b--')
     axs[i].plot(sim3[:,0], sim3[:,1], 'b--')
