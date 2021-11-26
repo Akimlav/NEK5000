@@ -6,7 +6,7 @@ Created on Wed Apr 21 12:34:56 2021
 @author: akimlavrinenko
 """
 import numpy as np
-from NEK5000_func_lib import particleCoordsNew, fast_scandir, listfile, find_in_list_of_list
+from NEK5000_func_lib import particleCoordsNew, fast_scandir, listfile, find_in_list_of_list, readParticleFile
 
 # dirpath = '/Users/akimlavrinenko/Documents/coding/data/test_data'
 # fold_name = 'fbalance'
@@ -46,7 +46,8 @@ for j in range(0,3):
 
 box_coords = np.asarray(np.transpose(box_coords))
 box_node = np.asarray(np.transpose(box_node))
-
+ppp = folders[0] + '/', allFileList[0]
+a = readParticleFile(folders[0] + '/' + allFileList[0])
 t0, a0 = particleCoordsNew (folders[0] + '/', allFileList[0])
 
 for k in range(n):

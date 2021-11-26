@@ -14,8 +14,8 @@ file_ext = 'stuck' #extension
 
 
 # data proccesing for each size
-dataOrig = np.genfromtxt(path + case_name + '.' + file_ext, skip_header = 0, invalid_raise = False)
-# data = np.genfromtxt('./part_refined.stuck', skip_header = 0, invalid_raise = False)
+# dataOrig = np.genfromtxt(path + case_name + '.' + file_ext, skip_header = 0, invalid_raise = False)
+data = np.genfromtxt('./part_refined.stuck', skip_header = 0, invalid_raise = False)
 A = np.unique(dataOrig[:,2])
 # aList = []
 # for i in A:

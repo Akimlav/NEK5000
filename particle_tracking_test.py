@@ -13,9 +13,9 @@ from matplotlib.font_manager import FontProperties
 #data[i,j] - i for row, j for column
 
 start_time = time.time()
-# path = '/Users/akimlavrinenko/Documents/coding/data/room_data/thatcher_deposition/'
-path = './'
-case_name = 'part_refined'
+path = '/Users/akimlavrinenko/Documents/coding/data/room_data/thatcher_deposition/'
+# path = './'
+case_name = 'part_01_12'
 file_ext = 'stuck' #extension
 
 #data proccesing
