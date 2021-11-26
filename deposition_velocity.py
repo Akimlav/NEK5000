@@ -13,8 +13,8 @@ from matplotlib.font_manager import FontProperties
 #data[i,j] - i for row, j for column
 
 start_time = time.time()
-path = '/Users/akimlavrinenko/Documents/coding/data/room_data/thatcher_deposition/'
-# path = '/home/akim/coding/data/room/thatcher_deposition/'
+# path = '/Users/akimlavrinenko/Documents/coding/data/room_data/thatcher_deposition/'
+path = '/home/akim/coding/data/room/thatcher_deposition/'
 
 # for i in range(1,5):
 #     experiment = np.genfromtxt(path + 'image_' + str(i) + '.dat')
@@ -32,7 +32,7 @@ for i in range(5):
     dl = (experiment[0,1],experiment[0,1])
     xl = (0,4)
     # experiment = np.delete(experiment,(10), axis=0)
-    simulation = np.genfromtxt(path + 'sim_' + str(i) + '.dat')
+    simulation = np.genfromtxt('./' + 'ps_rbu23_' + str(i) + '.dat')
     alex = np.genfromtxt(path + 'alex.dat')
     num_rows, num_cols = simulation.shape
     
