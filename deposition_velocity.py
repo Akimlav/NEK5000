@@ -13,8 +13,8 @@ from matplotlib.font_manager import FontProperties
 #data[i,j] - i for row, j for column
 
 start_time = time.time()
-# path = '/Users/akimlavrinenko/Documents/coding/data/room_data/thatcher_deposition/'
-path = '/home/akim/coding/data/room/thatcher_deposition/'
+path = '/Users/akimlavrinenko/Documents/coding/data/room_data/thatcher_deposition/'
+# path1 = './'
 
 # for i in range(1,5):
 #     experiment = np.genfromtxt(path + 'image_' + str(i) + '.dat')
@@ -33,7 +33,7 @@ for i in range(5):
     xl = (0,4)
     # experiment = np.delete(experiment,(10), axis=0)
     simulation = np.genfromtxt('./' + 'ps_rbu23_' + str(i) + '.dat')
-    alex = np.genfromtxt(path + 'alex.dat')
+    # alex = np.genfromtxt(path + 'alex.dat')
     num_rows, num_cols = simulation.shape
     
     hot_wall = [simulation[i,:] for i in range (0, num_rows) if simulation[i,3] == -0.5]
@@ -51,14 +51,24 @@ for i in range(5):
     walls = 'hot floor         hot wall         cold ceiling       cold wall'
     # Left01,Right01,Floor01,Ceiling01,Back01,Fore01 = 0, 5.1294e-06, 0, 6.104e-06, 9.2329e-07, 2.5647e-07
     
-    alex1 = np.array(((0, alex[i,2]),(1, alex[i,2])))
-    alex2 = np.array(((1, alex[i,0]),(2, alex[i,0])))
-    alex3 = np.array(((2, alex[i,3]),(3, alex[i,3])))
-    alex4 = np.array(((3, alex[i,1]),(4, alex[i,1])))
+    # alex1 = np.array(((0, alex[i,2]),(1, alex[i,2])))
+    # alex2 = np.array(((1, alex[i,0]),(2, alex[i,0])))
+    # alex3 = np.array(((2, alex[i,3]),(3, alex[i,3])))
+    # alex4 = np.array(((3, alex[i,1]),(4, alex[i,1])))
     sim1 = np.array(((0,vd_hf),(1,vd_hf)))
     sim2 = np.array(((1,vd_hw),(2,vd_hw)))
     sim3 = np.array(((2,vd_cc),(3,vd_cc)))
     sim4 = np.array(((3,vd_cw),(4,vd_cw)))
+    
+    sim = np.concatenate((sim1,sim2, sim3, sim4))
+    
+    np.savetxt('dv_ps_' + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + '.dat', sim)
+    
+    # np.savetxt('hf_' + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + '.dat', sim1)
+    # np.savetxt('hw_' + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + '.dat', sim2)
+    # np.savetxt('cs_' + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + '.dat', sim3)
+    # np.savetxt('cw_' + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + '.dat', sim4)
+    
     xticks = np.linspace(0,4,5)
     xlabels  = np.linspace(0.5,3.5,4)
     
@@ -66,6 +76,11 @@ for i in range(5):
     hw = np.asarray([[1,bl[i][1]],[2,bl[i][1]]])
     cs = np.asarray([[2,bl[i][2]],[3,bl[i][2]]])
     cw = np.asarray([[3,bl[i][3]],[4,bl[i][3]]])
+    
+    np.savetxt('hf_blm_' + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + '.dat', hf)
+    np.savetxt('hw_blm_' + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + '.dat', hw)
+    np.savetxt('cs_blm_' + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + '.dat', cs)
+    np.savetxt('cw_blm_' + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + '.dat', cw)
 
     axs[i].plot(experiment[:,0], experiment[:,1],'ro', markersize = 2)
 
@@ -77,6 +92,8 @@ for i in range(5):
     axs[i].plot(sim2[:,0], sim2[:,1], 'b-')
     axs[i].plot(sim3[:,0], sim3[:,1], 'b-')
     axs[i].plot(sim4[:,0], sim4[:,1], 'b-')
+    
+    
 
     # axs[i].plot(alex1[:,0], alex1[:,1], 'co-')
     # axs[i].plot(alex2[:,0], alex2[:,1], 'co-')
@@ -88,19 +105,30 @@ for i in range(5):
     axs[i].plot(sim4[:,0], sim4[:,1], 'b--')
 
     axs[i].plot(xl,dl, '--')
+    detectLimit = np.zeros((2,4))
+    # detectLimit[:,:2] = np.transpose(xl)
+    # detectLimit[:,2:] = np.transpose(dl)
+    detectLimit = np.vstack((xl,dl)).T
+    np.savetxt('dl_'  + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + '.dat', detectLimit)
+
     axs[i].set_yscale('log')
     axs[i].set_xticks(xticks)
     axs[i].set_xlim(0,4)
     axs[i].set_ylim(10e-10, 1.5*10e-04)
     axs[i].set_title('diameter ' + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + ' \u03BC' + 'm')
     axs[i].grid(True)
+    
+    ss = np.concatenate((sim1,sim2), axis =1)
+    sss = np.concatenate((ss,sim3), axis =1)
+    ssss = np.concatenate((sss,sim4), axis =1)
+    np.savetxt('./dv_' + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + '.dat', ssss)
 axs[4].text(0.5, -4.8, walls, horizontalalignment='center',
                 verticalalignment='center', transform=axs[0].transAxes)
 fig.tight_layout()
 
 # plt.savefig('particle_deposition_rBu23.png', dpi=150)
 # 
-# plt.savefig('particle_deposition_alex.png', dpi=150)
+plt.savefig('particle_deposition_alex.png', dpi=150)
 
 plt.show()
 

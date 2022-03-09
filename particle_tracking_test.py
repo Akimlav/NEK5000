@@ -13,9 +13,9 @@ from matplotlib.font_manager import FontProperties
 #data[i,j] - i for row, j for column
 
 start_time = time.time()
-path = '/Users/akimlavrinenko/Documents/coding/data/room_data/thatcher_deposition/'
-# path = './'
-case_name = 'part_01_12'
+# path = '/Users/akimlavrinenko/Documents/coding/data/room_data/thatcher_deposition/'
+path = './'
+case_name = 'part_refined'
 file_ext = 'stuck' #extension
 
 #data proccesing
@@ -32,7 +32,7 @@ for i in A:
     aList.append(bNp)
 
 # for data in aList:
-for data in range(2):
+for data in range(0,5):
     data = aList[data]
     num_rows, num_cols = data.shape
     hot_wall = [data[i,:] for i in range (0, num_rows) if data[i,3] == -0.5]
@@ -49,8 +49,14 @@ for data in range(2):
     adiabatic_front = np.array(adiabatic_front)
     adiabatic_back = np.array(adiabatic_back)
 
+    np.savetxt('hw_deposited_' + str(np.round((data[0,2] * 1.22 * 1e6), 2)) + '.dat', hot_wall)
+    np.savetxt('cw_deposited_' + str(np.round((data[0,2] * 1.22 * 1e6), 2)) + '.dat', cold_wall)
+    np.savetxt('cc_deposited_' + str(np.round((data[0,2] * 1.22 * 1e6), 2)) + '.dat', cold_ceiling)
+    np.savetxt('hf_deposited_' + str(np.round((data[0,2] * 1.22 * 1e6), 2)) + '.dat', hot_floor)
+    np.savetxt('af_deposited_' + str(np.round((data[0,2] * 1.22 * 1e6), 2)) + '.dat', adiabatic_front)
+    np.savetxt('ab_deposited_' + str(np.round((data[0,2] * 1.22 * 1e6), 2)) + '.dat', adiabatic_back)
     
-    fig, axs = plt.subplots(6, figsize=(5,30))
+    fig, axs = plt.subplots(6, figsize=(5,25))
     fontP = FontProperties()
     fontP.set_size('xx-small')
     # fig.suptitle('Total amount of particles are ' + str(len(data)), fontsize=16)
@@ -128,7 +134,7 @@ for data in range(2):
     plt.text(0, -0.615, text, horizontalalignment='center', 
              verticalalignment='center')
     
-    # plt.savefig('stuck_particles_' + str(np.round((data[0,2] * 1.22 * 1e6), 2)) + '.png', dpi=150)
+    plt.savefig('stuck_particles_' + str(np.round((data[0,2] * 1.22 * 1e6), 2)) + '.png', dpi=150)
     plt.show()
     
 start_time2 = time.time() - start_time

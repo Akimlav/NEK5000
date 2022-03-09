@@ -16,7 +16,7 @@ file_ext = 'stuck' #extension
 # data proccesing for each size
 # dataOrig = np.genfromtxt(path + case_name + '.' + file_ext, skip_header = 0, invalid_raise = False)
 data = np.genfromtxt('./part_refined.stuck', skip_header = 0, invalid_raise = False)
-A = np.unique(dataOrig[:,2])
+A = np.unique(data[:,2])
 # aList = []
 # for i in A:
 #     bList = []
@@ -53,11 +53,11 @@ Kn = 2*lambdaa/A
 Ktp = 2*Cs*(Kf+2*Kp*Kn)*(1+2*Kn*(1.2+0.41*np.exp(-0.44/Kn))) / ((1+6*Cm*Kn)*(2*Kf+Kp+4*Kp*Ct*Kn))
 
 n_th = -18* Ktp * nu_f**2 * rho_f * Ts / (A**2 * u_s**2 * rho_p * T0)
-n_th2 = n_th[2:]
+n_th2 = n_th
 
 # for i in range(len(A)):
 
-for i in range(2,5):
+for i in range(0,5):
     thphList = []
     data = np.genfromtxt('./ps_rbu23_' + str(i) + '.dat')
     num_rows, num_cols = data.shape
@@ -74,13 +74,43 @@ for i in range(2,5):
     hot_floor = np.array(hot_floor)
     adiabatic_front = np.array(adiabatic_front)
     adiabatic_back = np.array(adiabatic_back)
+    
+    # print(np.mean(cold_ceiling[:,10] * n_th[i]))
+    print('_____________')
+    # print(np.mean(cold_wall[:,10]* n_th[i]))
+    print(str(round((A[i]*1.22e6), 3)) + ' \u03BC' + 'm')
+    print('_____________')
+    plt.hist(cold_wall[:,10] * n_th[i],bins = 10, label = 'cold_wall')
+    print(len(cold_wall), 'wall')
+    if len(cold_ceiling) > 0:
+        plt.hist(cold_ceiling[:,10] * n_th[i],bins = 10, label = 'cold_ceiling')
+        print(len(cold_ceiling), 'ceiling')
+        
+    if len (hot_floor) > 0:
+        plt.hist(hot_floor[:,10] * n_th[i],bins = 10, label = 'hot_floor')
+        print(len(hot_floor), 'floor')
+        
+    wallList = [cold_wall, cold_ceiling, hot_wall]
     # print(len(hot_floor))
-    for j in hot_floor[:,10]:
-        # print(i, j)
-        thph = j * n_th[i]
-        thphList.append(thph)
-    m = np.mean(thphList)
-    print(round((A[i]*1.22e6), 3), '-', round(m,2))
-    plt.plot(thphList)
+    for k in wallList:
+        if len(k) > 0:
+            for j in range(len(k)):
+                # print(i, j)
+                # thph = (k[j] * n_th[i])/9.81
+                thphMag = ((k[j,10]**2 + k[j,11]**2 + k[j,12]**2)**0.5)*n_th[i] / 9.81
+                # print(thph)
+                thphList.append(thphMag)
+            m = np.mean(thphList)
+            # n = np.mean(j)
+        
+        # print(len(thphList), '|',round((A[i]*1.22e6), 3), '|', round(m,2),'|', n,'|', round(n_th[i],2))
+    # print('_________________________________________________')
+    # plt.plot(thphList)
     # plt.plot(A[i]*1.22, m, 'o')
-plt.show()
+    # plt.ylim(0,270)
+    plt.title(str(round((A[i]*1.22e6), 3)) + ' \u03BC' + 'm')
+    plt.xlabel('thermophoresis force')
+    plt.ylabel('amount of particles')
+    plt.legend()
+    plt.savefig(str(round((A[i]*1.22e6), 3)) + '.png', dpi=150)
+    plt.show()
