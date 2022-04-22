@@ -617,12 +617,12 @@ def matrix(data_t1, data_t2, n):
 
 def build_matrix (choose, tt1, tt2, n, path1, path2, fileList):
     #params
-    num_ps = 5
+    num_ps = 1
     x0 = -0.5
     y0 = -0.5
     z0 = -0.5
     
-    radius = 0.1
+    radius = 0.05
     t1, a1 = particleCoordsNew (path1, fileList[tt1])
     try:
         t2, a2 = particleCoordsNew (path2, fileList[tt2])
@@ -648,7 +648,7 @@ def build_matrix (choose, tt1, tt2, n, path1, path2, fileList):
     box_coords = np.asarray(np.transpose(box_coords))
     box_node = np.asarray(np.transpose(box_node))
     center_list = (list(itertools.product(box_node[:,0], box_node[:,1], box_node[:,2])))
-    center_list = [  np.round(elem,2) for elem in center_list]
+    center_list = [np.round(elem,2) for elem in center_list]
     if choose.lower() in ['s', 'sphere']:
         t0, a0 = particleCoordsNew (path1, fileList[0])
         for k in range(len(center_list)):

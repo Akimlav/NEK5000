@@ -14,7 +14,10 @@ import itertools
 
 start_time = time()
 
-dirpath = '/Users/akimlavrinenko/Dropbox/My Mac (Akims-MacBook-Pro.local)/Documents/coding/data/test_data'
+# dirpath = '/Users/akimlavrinenko/Dropbox/My Mac (Akims-MacBook-Pro.local)/Documents/coding/data/test_data'
+# fold_name = 'fbala'
+
+dirpath = '../'
 fold_name = 'fbala'
 # dirpath = '/home/afabret/data/room_deposition/production_run/'
 # fold_name = 'roomBackUp'
@@ -26,10 +29,10 @@ folders.sort()
 listOfFileList, allFileList = listfile(folders)
 
 #params
-step = 3 # file step
-n = 20 #number of the bins
-num_ps = 5
-radius = 0.025
+step = 10 # file step
+n = 4 #number of the bins
+num_ps = 1
+radius = 0.05
 #axis_count = 1
 allFileList = allFileList[0::step]
 
@@ -159,7 +162,7 @@ for k in range(len(box_node[:,0])):
     fontP = FontProperties()
     fontP.set_size('xx-small')
     axs[0].plot(np.log(np_sigma_mean[:,0]), np_sigma_mean[:,1])
-    axs[1].plot(np.log(np_sigma_mean[:,0]), np.log(np_sigma_mean[:,1])i)
+    axs[1].plot(np.log(np_sigma_mean[:,0]), np.log(np_sigma_mean[:,1]))
     # axs[2].hist(, 1000, normed=1, facecolor='green', alpha=0.5)
     axs[0].set_xlabel('log time')
     axs[0].set_ylabel('Mean sigma')

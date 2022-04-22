@@ -40,7 +40,7 @@ R = floor(len(allFileList)/step)
 for i in range(R):
     print(i)
     file2 = 0 + i*step
-    inpt =['a', 0, file2, 10, path1, pathTwo(file2), allFileList]
+    inpt =['s', 0, file2, 5, path1, pathTwo(file2), allFileList]
     t1, t2, B = build_matrix(*inpt)
     print(t2)
     # print(len(B), B.max())
@@ -55,7 +55,7 @@ for i in range(R):
     elif inpt[0] == 's':
         title = 'Sphere'  + ' t1 = ' + str(t1) +  ', t2 = ' + str(t2)
         tit = 'matrix_sphere'  + '_'+ str(int(t1)) +  '_' + str(int(t2))
-        # heatmap = plt.pcolor(np.array(((0,30),(0,30))))
+        heatmap = plt.pcolor(np.array(((0,30),(0,30))))
     fig, ax = plt.subplots(figsize=(7, 7))
     im = ax.imshow(corrected)
     ax.set_title(title)

@@ -8,10 +8,9 @@ Created on Tue Apr 13 13:24:13 2021
 import matplotlib.pyplot as plt
 import numpy as np
 
-data = np.genfromtxt('/Users/akimlavrinenko/Documents/coding/data/room_data/each_size_sphere_traj/sphr_trj_c_0_ps_0.dat')
-
-for i in range(200,300):
-    fig = plt.figure(figsize=(5, 5))
+data = np.genfromtxt('/Users/akimlavrinenko/Documents/coding/data/room_data/each_size_sphere_traj/sphr_trj_diag_c_0_ps_0.dat')
+fig = plt.figure(figsize=(5, 5))
+for i in range(len(data)):
     ax = fig.add_subplot(projection='3d')
     print(i)
     x = data[:,1::3]
@@ -28,5 +27,5 @@ for i in range(200,300):
     ax.set_ylabel('Z-axis')
     ax.set_zlabel('Y-axis')
     ax.set_title('sphr_trj_c_0_ps_0, t = ' + str(time[i]))
-    # plt.savefig('c_0_ps_0_t_' + str(i) +'.png', dpi=200)
+    plt.savefig('c_0_ps_0_t_' + str(i) +'.png', dpi=200)
     plt.show()
