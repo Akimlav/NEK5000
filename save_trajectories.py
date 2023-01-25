@@ -34,7 +34,7 @@ filtered = []
 t0, a0 = particleCoordsNew (folders[0] + '/', allFileList[0])
 flat_list0 = [item for sublist in a0 for item in sublist]
 flat_list0 = np.asarray(flat_list0)
-index = (np.where((flat_list0[:,2] <= 0.01) & (flat_list0[:,2] >= -0.01)))
+# index = (np.where((flat_list0[:,2] <= 0.01) & (flat_list0[:,2] >= -0.01)))
 
 start_time2 = time()
 for file in allFileList:
@@ -42,16 +42,16 @@ for file in allFileList:
     if file in listOfFileList[ind[0]]:
         path = folders[ind[0]] + '/'
         t, a = particleCoordsNew (path, file)
-        t = np.round((t - 0.1628499834108E+03), 3)
+        t = np.round((t - t0),3)
         flat_list = [item for sublist in a for item in sublist]
         npList = np.asarray(flat_list)
-        npList = npList[index]
+        # npList = npList[index]
         flatList = npList.ravel()
         final = np.append(t, flatList)
         ls.append(final)
 
 ls = np.asarray(ls)
-np.savetxt('trajectories.txt', ls)
+np.savetxt('allPTrajectories.dat', ls)
 
 # print('Plotting was: %.3f seconds' % (time() - start_time4))
 # print('All it was: %.3f seconds'  % (time() - start_time))

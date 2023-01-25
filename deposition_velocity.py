@@ -48,6 +48,7 @@ for i in range(5):
     vd_hw = len(hot_wall)/55000 * 1/t * 1.10164
     vd_hf = len(hot_floor)/55000 * 1/t * 1.10164
     # print(vd_cw,vd_cc, vd_hw, vd_hf)
+    print('ps ', (np.round((simulation[0,2] * 1.22 * 1e6), 2),  len(cold_wall) + len(cold_ceiling) + len(hot_wall) + len(hot_floor)))
     walls = 'hot floor         hot wall         cold ceiling       cold wall'
     # Left01,Right01,Floor01,Ceiling01,Back01,Fore01 = 0, 5.1294e-06, 0, 6.104e-06, 9.2329e-07, 2.5647e-07
     
@@ -61,8 +62,8 @@ for i in range(5):
     sim4 = np.array(((3,vd_cw),(4,vd_cw)))
     
     sim = np.concatenate((sim1,sim2, sim3, sim4))
-    
-    np.savetxt('dv_ps_' + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + '.dat', sim)
+    print(sum(sim[:,1]))
+    # np.savetxt('dv_ps_' + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + '.dat', sim)
     
     # np.savetxt('hf_' + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + '.dat', sim1)
     # np.savetxt('hw_' + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + '.dat', sim2)
@@ -104,6 +105,8 @@ for i in range(5):
     axs[i].plot(sim3[:,0], sim3[:,1], 'b--')
     axs[i].plot(sim4[:,0], sim4[:,1], 'b--')
 
+    # sumVd = 
+
     axs[i].plot(xl,dl, '--')
     detectLimit = np.zeros((2,4))
     # detectLimit[:,:2] = np.transpose(xl)
@@ -121,16 +124,42 @@ for i in range(5):
     ss = np.concatenate((sim1,sim2), axis =1)
     sss = np.concatenate((ss,sim3), axis =1)
     ssss = np.concatenate((sss,sim4), axis =1)
-    np.savetxt('./dv_' + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + '.dat', ssss)
+    # np.savetxt('./dv_' + str(np.round((simulation[0,2] * 1.22 * 1e6), 2) ) + '.dat', ssss)
 axs[4].text(0.5, -4.8, walls, horizontalalignment='center',
                 verticalalignment='center', transform=axs[0].transAxes)
 fig.tight_layout()
 
 # plt.savefig('particle_deposition_rBu23.png', dpi=150)
 # 
-plt.savefig('particle_deposition_alex.png', dpi=150)
+# plt.savefig('particle_deposition_alex.png', dpi=150)
 
 plt.show()
 
 start_time2 = time.time() - start_time
 print("It was: %.5f seconds" % (start_time2))
+
+cw = 3+18+58+3+16-100
+hw = 3+18+3+2+16-100
+
+c1 = 0.0440207972270364
+c2 = 0.04071207430340557
+
+back = 2.96
+bot = 16.7
+cold = 57.7
+front = 2.96
+hot = 2.53
+top = 17.55
+
+Vdhw = 2.63e-6
+Vdcw = 6.46e-5
+
+Vdbot = bot/cold*Vdcw
+
+
+
+
+
+
+
+

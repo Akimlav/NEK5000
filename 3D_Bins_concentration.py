@@ -7,7 +7,7 @@ Created on Tue Jan 12 17:25:01 2021
 """
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.font_manager import FontProperties
+# from matplotlib.font_manager import FontProperties
 from NEK5000_func_lib import particleCoordsNew, fast_scandir, listfile, find_in_list_of_list
 from time import time
 import itertools
@@ -17,10 +17,10 @@ start_time = time()
 # dirpath = '/Users/akimlavrinenko/Dropbox/My Mac (Akims-MacBook-Pro.local)/Documents/coding/data/test_data'
 # fold_name = 'fbala'
 
-dirpath = '../'
-fold_name = 'fbala'
-# dirpath = '/home/afabret/data/room_deposition/production_run/'
-# fold_name = 'roomBackUp'
+# dirpath = '../data/test_data/'
+# fold_name = 'fbala'
+dirpath = '/home/afabret/data/room_deposition/production_run/'
+fold_name = 'roomBackUp'
 
 folders = fast_scandir(dirpath)
 folders = [word for word in folders if fold_name in word]
@@ -29,12 +29,15 @@ folders.sort()
 listOfFileList, allFileList = listfile(folders)
 
 #params
-step = 1 # file step
-n = 5 #number of the bins
+step = 10 # file step
+n = 10 #number of the bins
 num_ps = 5
 radius = 0.05
+lastfile = 10000
+#
 allFileList = allFileList[0::step]
 allFileList = sorted(allFileList)
+allFileList = allFileList[:lastfile]
 
 x0 = -0.5
 y0 = -0.5
@@ -72,8 +75,8 @@ for k in range(1):
     cc = []
     tt = []
     fff = np.zeros(5)
-    center = box_node[k,:]
-    # center = np.asarray([0.05, -0.45, -0.45])
+    # center = box_node[k,:]
+    center = np.asarray([ 0.025,  0.025,  0.025])
 
     for ps in range(num_ps):
         aa0 = np.asarray(a0[ps])
@@ -114,14 +117,14 @@ for k in range(1):
 
 ts = [cc[z:z+(num_ps)] for z in range(0, len(cc), (num_ps))]
 
+
+
+sum_array = np.sum(ts[-1], axis=0)# initial=ts[0][0])
 A = []
 for p in range(len(ts)):
-    for j in range(3):
-        tss = np.asarray(ts[p])
-        tsum = np.sum(tss, axis = 0)
-        tsumm = np.sum(tss, axis = 0)
-        tsummm = np.sum(tsumm, axis = j)
-        A.append(tsummm)
+    sum_array = np.sum(ts[p], axis=0)
+    A.append(sum_array)
+
 
 B = [A[z:z+3] for z in range(0, len(A), 3)]
 
@@ -130,31 +133,38 @@ ttt = np.zeros(len(A))
 ii = 0
 for i in range(1,len(tt)):
     ii = ii + 3
-    print(ii)
+    # print(ii)
     ttt[0:3] = tt[0]
     ttt[ii: ii+3] = tt[i]
 
-axisList = ['x','y','z']
-# for axis in axisList:
-for i in range(int(len(B))):
-    for axis in range(3):
-    
-        title = 'Sphere'  + ' t = ' + str(tt[i]) + ', ' + axisList[axis] + ' - projection '
-        tit = 'sph_pop_' + axisList[axis] + '_t_' + str(tt[i])
-        fig, ax = plt.subplots(figsize=(5, 5))
-        ax.set_title(title)
-        c = ax.pcolor(B[i][axis].T, cmap = 'inferno', vmin=0,edgecolors='w', linewidths=0.3)#vmax=np.max(A[i])
-        
-        plt.xticks((np.linspace(1,n,n)))
-        plt.yticks((np.linspace(1,n,n)))
-        # plt.gca().invert_yaxis()
-        # plt.gca().invert_xaxis()
-        fig.colorbar(c, ax=ax)
-        fig.tight_layout()
-    
-        plt.savefig(tit + '.png', dpi=150)
-        plt.show()
-    # np.savetxt((tit + '.txt'), B)
+Cinf = (sum(sum(sum(A[0]))))/n**3
+sigmalist = []
+sigmaTsigma0list = []
+for t in range(len(allFileList)):
+    CC = np.zeros(np.shape(A[0]))
+    sumC = 0
+    for i in range(len(A[0])):
+        for j in range(len(A[0])):
+            for k in range(len(A[0])):
+                CC[i,j,k] = (A[t][i,j,k] - Cinf)**2 * delta**3
+    sigma = np.sqrt((sum(sum(sum(CC))))/n**3)
+    # print(sigma)
+    sigmalist.append(sigma)
+    sigmaTsigma0 = sigmalist[t]/sigmalist[0]
+    print(sigmaTsigma0)
+    sigmaTsigma0list.append(sigmaTsigma0)
 
-C = B[0][0]
-ct = C.T
+
+res = np.asarray([tt,sigmaTsigma0list]).T
+
+np.savetxt('./sigma.dat', res)
+
+plt.plot(tt,sigmaTsigma0list, marker = 'v', color = 'm', label = 'DNS', markersize = 4)
+plt.ylabel('sigma[t]/sigma[0]')
+plt.xlabel('t, s')
+plt.legend(loc="upper right")
+plt.savefig('./sigmaTsigma0.png', dpi = 200)
+# plt.show()
+
+
+

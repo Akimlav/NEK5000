@@ -201,23 +201,6 @@ def particleCoordsNew (path, fileName):
     
     return(time, allp)
 
-def particleCoordsForces (path, fileName):
-    time,pdata = readParticleFile(str(path) + str(fileName))
-    
-    fp = []
-            
-    for ibatch in range(0,pdata.shape[0]):
-        for ipart in range(0,pdata.shape[2]):
-            for ps in range(0,pdata.shape[1]):
-                xpart = pdata[ibatch,ps,ipart]['xp']
-                fpart = pdata[ibatch,ps,ipart][7]
-                data = np.concatenate((xpart, fpart), axis = 0)
-                fp.append(data)
-
-    allp = [fp[z:z+pdata.shape[2]] for z in range(0, len(fp), pdata.shape[2])]
-    
-    return(time, allp)
-
 def plotVideo (choose, n, Dimension, particleSize, center, radius, plotsmbl):
     start_time = time()
     xyzz = particleCoords(path, fileList[0], particleSize)
@@ -617,12 +600,12 @@ def matrix(data_t1, data_t2, n):
 
 def build_matrix (choose, tt1, tt2, n, path1, path2, fileList):
     #params
-    num_ps = 1
+    num_ps = 5
     x0 = -0.5
     y0 = -0.5
     z0 = -0.5
     
-    radius = 0.05
+    radius = 0.1
     t1, a1 = particleCoordsNew (path1, fileList[tt1])
     try:
         t2, a2 = particleCoordsNew (path2, fileList[tt2])
@@ -648,7 +631,7 @@ def build_matrix (choose, tt1, tt2, n, path1, path2, fileList):
     box_coords = np.asarray(np.transpose(box_coords))
     box_node = np.asarray(np.transpose(box_node))
     center_list = (list(itertools.product(box_node[:,0], box_node[:,1], box_node[:,2])))
-    center_list = [np.round(elem,2) for elem in center_list]
+    center_list = [  np.round(elem,2) for elem in center_list]
     if choose.lower() in ['s', 'sphere']:
         t0, a0 = particleCoordsNew (path1, fileList[0])
         for k in range(len(center_list)):
@@ -739,33 +722,3 @@ def fast_scandir(dirname):
     for dirname in list(subfolders):
         subfolders.extend(fast_scandir(dirname))
     return subfolders
-
-def find_nearest(array, value):
-    array = np.asarray(array)
-    idx = (np.abs(array - value)).argmin()
-    return array[idx]
-
-def estimate_coef(x, y):
-    # number of observations/points
-    n = np.size(x)
- 
-    # mean of x and y vector
-    m_x = np.mean(x)
-    m_y = np.mean(y)
- 
-    # calculating cross-deviation and deviation about x
-    SS_xy = np.sum(y*x) - n*m_y*m_x
-    SS_xx = np.sum(x*x) - n*m_x*m_x
- 
-    # calculating regression coefficients
-    b_1 = SS_xy / SS_xx
-    b_0 = m_y - b_1*m_x
- 
-    return (b_0, b_1)
-
-def part(fp,lp, data):
-    ref_point_s = find_nearest(data, fp)
-    ref_point_e = find_nearest(data, lp)
-    rp = [ref_point_s, ref_point_e]
-    ind = np.where(np.isin(data, rp))
-    return ind
