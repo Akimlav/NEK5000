@@ -17,10 +17,10 @@ start_time = time()
 # dirpath = '/Users/akimlavrinenko/Dropbox/My Mac (Akims-MacBook-Pro.local)/Documents/coding/data/test_data'
 # fold_name = 'fbala'
 
-dirpath = '../'
-fold_name = 'fbala'
-# dirpath = '/home/afabret/data/room_deposition/production_run/'
+# dirpath = '/home/akim/room_production_pp/old/fbalance/'
 # fold_name = 'roomBackUp'
+dirpath = '/home/afabret/data/room_deposition/production_run/'
+fold_name = 'roomBackUp'
 
 folders = fast_scandir(dirpath)
 folders = [word for word in folders if fold_name in word]
@@ -35,7 +35,7 @@ num_ps = 5
 radius = 0.05
 allFileList = allFileList[0::step]
 allFileList = sorted(allFileList)
-
+# allFileList = allFileList[:2]
 x0 = -0.5
 y0 = -0.5
 z0 = -0.5
@@ -60,11 +60,17 @@ box_node = np.round(box_node, 3)
 center_list = (list(itertools.product(box_node[:,0], box_node[:,1], box_node[:,2])))
 center_list = [np.round(elem,3) for elem in center_list]
 
-t0, a0 = particleCoordsNew (folders[0] + '/', allFileList[0])
+t0, a0 = particleCoordsNew (folders[1] + '/', allFileList[0])
+# t0, a0 = particleCoordsNew (folders[0] + '/', allFileList[0])
+
+pos = [box_node[0,:], box_node[4,:]]
+name = ['sph_pop_crnr_ax_', 'sph_pop_cntr_ax_']
+
 
 # for k in range(len(box_node[:,0])):
 for k in range(1):
 # for k in range(4,5):
+# for k in range(2):
     filtered = []
     ps_index = []
     len_filtered = []
@@ -74,6 +80,7 @@ for k in range(1):
     fff = np.zeros(5)
     center = box_node[k,:]
     # center = np.asarray([0.05, -0.45, -0.45])
+
 
     for ps in range(num_ps):
         aa0 = np.asarray(a0[ps])
@@ -111,6 +118,7 @@ for k in range(1):
                 # t_c.append([t, H])
                 cc.append(H)
                 tt.append(t)
+
 
 ts = [cc[z:z+(num_ps)] for z in range(0, len(cc), (num_ps))]
 
@@ -151,10 +159,42 @@ for i in range(int(len(B))):
         # plt.gca().invert_xaxis()
         fig.colorbar(c, ax=ax)
         fig.tight_layout()
+
+    ts = [cc[z:z+(num_ps)] for z in range(0, len(cc), (num_ps))]
     
-        plt.savefig(tit + '.png', dpi=150)
-        plt.show()
-    # np.savetxt((tit + '.txt'), B)
+    A = []
+    for p in range(len(ts)):
+        for j in range(3):
+            tss = np.asarray(ts[p])
+            tsum = np.sum(tss, axis = 0)
+            tsumm = np.sum(tss, axis = 0)
+            tsummm = np.sum(tsumm, axis = j)
+            A.append(tsummm)
+    
+    B = [A[z:z+3] for z in range(0, len(A), 3)]
+    tt = tt[::5]
+
+    
+    axisList = ['x','y','z']
+    # for axis in axisList:
+    for i in range(int(len(B))):
+        for axis in range(3):
+            arr = B[i][axis]
+            t = np.round(tt[i]*7.37,2)
+            title = 'Sphere'  + ' t = ' + str(t) + ' s, ' + axisList[axis] + ' - projection'
+            tit = name[k] + axisList[axis] + '_t_' + str('%04d' % t)
+            fig, ax = plt.subplots(figsize=(5, 5))
+            ax.set_title(title)
+            c = ax.pcolor(np.log10(arr), cmap = 'Reds', vmin=0, vmax=2.3,edgecolors='k', linewidths=0.0)
+            plt.xticks((np.linspace(1,10,10)))
+            plt.yticks((np.linspace(1,10,10)))
+            fig.colorbar(c, ax=ax)
+            fig.tight_layout()
+        
+            plt.savefig(tit + '.png', dpi=150)
+            plt.show()
+            plt.close()
+        # np.savetxt((tit + '.txt'), B)
 
 C = B[0][0]
 ct = C.T

@@ -722,3 +722,4 @@ def fast_scandir(dirname):
     for dirname in list(subfolders):
         subfolders.extend(fast_scandir(dirname))
     return subfolders
+
