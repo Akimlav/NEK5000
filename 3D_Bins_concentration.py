@@ -7,7 +7,6 @@ Created on Tue Jan 12 17:25:01 2021
 """
 import numpy as np
 import matplotlib.pyplot as plt
-# from matplotlib.font_manager import FontProperties
 from NEK5000_func_lib import particleCoordsNew, fast_scandir, listfile, find_in_list_of_list
 from time import time
 import itertools
@@ -30,14 +29,14 @@ listOfFileList, allFileList = listfile(folders)
 
 #params
 step = 10 # file step
-n = 10 #number of the bins
+n = 5 #number of the bins
 num_ps = 5
-radius = 0.05
-lastfile = 10000
+radius = 0.1
+# lastfile = 10000
 #
 allFileList = allFileList[0::step]
 allFileList = sorted(allFileList)
-allFileList = allFileList[:lastfile]
+# allFileList = allFileList[:lastfile]
 
 x0 = -0.5
 y0 = -0.5
@@ -76,7 +75,7 @@ for k in range(1):
     tt = []
     fff = np.zeros(5)
     # center = box_node[k,:]
-    center = np.asarray([ 0.025,  0.025,  0.025])
+    center = np.asarray([ 0.0,  0.0,  0.0])
 
     for ps in range(num_ps):
         aa0 = np.asarray(a0[ps])
@@ -137,16 +136,15 @@ for i in range(1,len(tt)):
     ttt[0:3] = tt[0]
     ttt[ii: ii+3] = tt[i]
 
-Cinf = (sum(sum(sum(A[0]))))/n**3
+Cinf = (sum(sum(sum(A[0]))))
 sigmalist = []
 sigmaTsigma0list = []
 for t in range(len(allFileList)):
     CC = np.zeros(np.shape(A[0]))
-    sumC = 0
     for i in range(len(A[0])):
         for j in range(len(A[0])):
             for k in range(len(A[0])):
-                CC[i,j,k] = (A[t][i,j,k] - Cinf)**2 * delta**3
+                CC[i,j,k] = (A[t][i,j,k]/delta**3 - Cinf)**2
     sigma = np.sqrt((sum(sum(sum(CC))))/n**3)
     # print(sigma)
     sigmalist.append(sigma)
@@ -157,7 +155,7 @@ for t in range(len(allFileList)):
 
 res = np.asarray([tt,sigmaTsigma0list]).T
 
-np.savetxt('./sigma.dat', res)
+np.savetxt('./sigma_dns.dat', res)
 
 plt.plot(tt,sigmaTsigma0list, marker = 'v', color = 'm', label = 'DNS', markersize = 4)
 plt.ylabel('sigma[t]/sigma[0]')
@@ -165,6 +163,21 @@ plt.xlabel('t, s')
 plt.legend(loc="upper right")
 plt.savefig('./sigmaTsigma0.png', dpi = 200)
 # plt.show()
-
-
+#backupcode while I dont belive Alex
+# Cinf = (sum(sum(sum(A[0]))))/n**3
+# sigmalist = []
+# sigmaTsigma0list = []
+# for t in range(len(allFileList)):
+#     CC = np.zeros(np.shape(A[0]))
+#     sumC = 0
+#     for i in range(len(A[0])):
+#         for j in range(len(A[0])):
+#             for k in range(len(A[0])):
+#                 CC[i,j,k] = (A[t][i,j,k] - Cinf)**2 * delta**3
+#     sigma = np.sqrt((sum(sum(sum(CC))))/n**3)
+#     # print(sigma)
+#     sigmalist.append(sigma)
+#     sigmaTsigma0 = sigmalist[t]/sigmalist[0]
+#     print(sigmaTsigma0)
+#     sigmaTsigma0list.append(sigmaTsigma0)
 
